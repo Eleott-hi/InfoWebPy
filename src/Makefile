@@ -1,24 +1,25 @@
-SERVER_DIR := info_21_web_fastapi
+SERVER_DIR := fastapi
 SERVER_HOST := 0.0.0.0
 SERVER_PORT := 8000
 SERVER_RELOAD := --reload
 
-UI_DIR := info_21_web_ui
+UI_DIR := frontend
 
-DB_DIR := database
+DB_DIR := postgres
+DB_CONTAINER_NAME := db
 
 runserver:
-	cd $(SERVER_DIR); uvicorn main:app --host $(SERVER_HOST) --port $(SERVER_PORT) $(SERVER_RELOAD)
+	cd $(SERVER_DIR); python3 main.py
 
 runui:
 	cd $(UI_DIR); npm run dev
 
 postgres: clean_db
-	cd $(DB_DIR); docker-compose up 
+	docker-compose up 
 
 clean_db:
-	-docker stop db
-	-docker rm db
+	-docker stop $(DB_CONTAINER_NAME)
+	-docker rm $(DB_CONTAINER_NAME)
 
-orm:
-	cd $(SERVER_DIR); python3 orm.py
+orm: 
+	cd $(SERVER_DIR); python3 DBModels.py

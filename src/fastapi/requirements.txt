@@ -1,0 +1,4 @@
+pydantic
+fastapi[all]
+sqlalchemy
+psycopg2

@@ -16,25 +16,31 @@ from sqlalchemy import (
 )
 
 
-DATABASE_URL = "postgresql://postgres:postgres@localhost:5432/postgres"
+DATABASE_URL = "postgresql://postgres:postgres@db:5432/postgres"
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-# Base = declarative_base()
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 class Base(DeclarativeBase):
     pass
 
 
+check_status_enum = ENUM('Start', 'Success', 'Failure',
+                         name='check_status', create_type=False)
+
+
 class Peer(Base):
     __tablename__ = "peers"
 
-    # nickname = Column(String, primary_key=True)
-    # birthday = Column(DateTime, nullable=False)
-
-    # id : Mapped[int] = mapped_column(primary_key=True)
     nickname: Mapped[str] = mapped_column(primary_key=True)
-    # nickname: Mapped[str] = mapped_column(nullable=False)
     birthday: Mapped[datetime.datetime] = mapped_column(nullable=False)
 
     def __str__(self):
@@ -45,10 +51,8 @@ class Task(Base):
     __tablename__ = "tasks"
 
     title: Mapped[str] = mapped_column(primary_key=True)
-    max_xp: Mapped[str] = mapped_column(nullable=False)
+    max_xp: Mapped[int] = mapped_column(nullable=False)
     parent_task: Mapped[str] = mapped_column(ForeignKey('tasks.title'))
-
-    # Relationships
 
     def __str__(self):
         return f"Task(title={self.title}, parent_task={self.parent_task}, max_xp={self.max_xp})"
@@ -64,14 +68,8 @@ class Check(Base):
         ForeignKey('tasks.title'), nullable=False)
     date: Mapped[datetime.datetime] = mapped_column(nullable=False)
 
-    # Relationships
-
     def __str__(self):
         return f"Check(id={self.id}, peer={self.peer}, date={self.date})"
-
-
-check_status_enum = ENUM('Start', 'Success', 'Failure',
-                         name='check_status', create_type=False)
 
 
 class P2P(Base):
@@ -84,8 +82,6 @@ class P2P(Base):
         ForeignKey('peers.nickname'), nullable=False)
     state = mapped_column(check_status_enum, nullable=False)
     time: Mapped[datetime.time] = mapped_column(nullable=False)
-
-    # Relationships
 
     def __str__(self):
         return f"P2P(id={self.id}, check={self.check}, checking_peer={self.checking_peer}, state={self.state}, time={self.time})"
