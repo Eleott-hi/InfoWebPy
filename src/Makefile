@@ -8,6 +8,10 @@ UI_DIR := frontend
 DB_DIR := postgres
 DB_CONTAINER_NAME := db
 
+all: clean_db
+	docker-compose up
+
+
 runserver:
 	cd $(SERVER_DIR); python3 main.py
 

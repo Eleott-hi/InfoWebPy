@@ -1,8 +1,6 @@
-from typing import Type, Generic, List, TypeVar
+from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from pydantic import BaseModel
-from sqlalchemy import inspect
 
 
 class CRUDRouter():
@@ -20,9 +18,8 @@ class CRUDRouter():
         self.db_model = db_model
         self.db = db
         self.router = APIRouter(prefix=prefix)
-
-        inspector = inspect(self.db_model)
-        self.db_model_pk_field = inspector.primary_key[0].name if inspector.primary_key else None
+        self.db_model_pk_field = self.db_model.primary_key.columns[
+            0].name if self.db_model.primary_key else None
 
         @self.router.post("/", response_model=self.response_schema)
         async def create_item(item: self.create_schema, db: Session = Depends(self.db)):
@@ -40,22 +37,18 @@ class CRUDRouter():
         @self.router.get("/{id}", response_model=self.response_schema)
         async def read_one(id: int | str, db: Session = Depends(self.db)):
 
-            if self.db_model_pk_field:
-
-                item = db.query(self.db_model).filter(
-                    getattr(self.db_model, self.db_model_pk_field) == id
-                ).first()
-
-                return item
-
-            else:
+            if self.db_model_pk_field is None:
                 raise HTTPException(
                     status_code=500,
                     detail="Table without primary key. Unhandled case",
                 )
 
+            return db.query(self.db_model).filter(
+                self.db_model.c[self.db_model_pk_field] == id
+            ).first()
+
         @self.router.put("/{id}", response_model=self.response_schema)
-        async def update_item(id: int, updated_item: self.create_schema, db: Session = Depends(self.db)):
+        async def update_item(id: int | str, updated_item: self.create_schema, db: Session = Depends(self.db)):
             item = await read_one(id, db)
 
             if item is None:
@@ -72,7 +65,7 @@ class CRUDRouter():
             return item
 
         @self.router.delete("/{id}", response_model=dict)
-        async def delete_item(id: int, db: Session = Depends(self.db)):
+        async def delete_item(id: int | str, db: Session = Depends(self.db)):
             item = await read_one(id, db)
 
             if item is None:

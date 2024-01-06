@@ -1,63 +1,27 @@
 from fastapi import FastAPI
 from CRUDRouter import CRUDRouter
-
-from DBModels import (
-    Peer,
-    Task,
-    Check,
-    P2P,
-    Verter,
-    TransferredPoints,
-    Friends,
-    Recomendation,
-    XP,
-    TimeTracking,
-    get_db,
-)
-
-from PydanticModels import (
-    PeerCreate, PeerResponse,
-    TaskCreate, TaskResponse,
-    CheckCreate, CheckResponse,
-    P2PCreate, P2PResponse,
-    VerterCreate, VerterResponse,
-    TransferedPointsCreate, TransferedPointsResponse,
-    FriendsCreate, FriendsResponse,
-    RecomendationCreate, RecomendationResponse,
-    XPCreate, XPResponse,
-    TimeTrackingCreate, TimeTrackingResponse,
-)
-
-
-routes_info = [
-    (PeerCreate, PeerResponse, Peer, "/peers",),
-    (TaskCreate, TaskResponse, Task, "/tasks",),
-    (CheckCreate, CheckResponse, Check, "/checks",),
-    (P2PCreate, P2PResponse, P2P, "/p2p",),
-    (VerterCreate, VerterResponse, Verter, "/verter",),
-    (TransferedPointsCreate, TransferedPointsResponse, TransferredPoints, "/points",),
-    (FriendsCreate, FriendsResponse, Friends, "/friends",),
-    (RecomendationCreate, RecomendationResponse,
-     Recomendation, "/recomendations",),
-    (XPCreate, XPResponse, XP, "/xp",),
-    (TimeTrackingCreate, TimeTrackingResponse, TimeTracking, "/time_tracking",),
-]
+from Models import models, get_db
 
 
 def LinkRouters(app):
-    for create_schema, response_schema, db_model, prefix in routes_info:
+    for model in models:
         app.include_router(
             CRUDRouter(
-                response_schema=response_schema,
-                create_schema=create_schema,
-                db_model=db_model,
+                response_schema=model["response_model"],
+                create_schema=model["create_model"],
+                db_model=model["db_model"],
                 db=get_db,
-                prefix=prefix,
+                prefix=f'/{model["db_model"]}',
             ).router
         )
 
 app = FastAPI()
 LinkRouters(app)
+
+
+@app.get("/")
+async def root():
+    return {"tables": [str(model["db_model"]) for model in models]}
 
 if __name__ == "__main__":
     import uvicorn
