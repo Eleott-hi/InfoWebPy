@@ -1,9 +1,9 @@
 from fastapi import FastAPI
-from CRUDRouter import CRUDRouter
-from Models import models, get_db
+from Routers.CRUDRouter import CRUDRouter
+from ORM.Models import create_pydantic_api_models
+from ORM.Database import get_db, engine
 
-
-def LinkRouters(app):
+def LinkRouters(app, models):
     for model in models:
         app.include_router(
             CRUDRouter(
@@ -15,8 +15,10 @@ def LinkRouters(app):
             ).router
         )
 
+
 app = FastAPI()
-LinkRouters(app)
+models = create_pydantic_api_models(engine)
+LinkRouters(app, models)
 
 
 @app.get("/")

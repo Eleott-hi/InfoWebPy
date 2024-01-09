@@ -17,7 +17,7 @@ from sqlalchemy import (
 
 
 DATABASE_URL = "postgresql://postgres:postgres@db:5432/postgres"
-engine = create_engine(DATABASE_URL)
+engine = create_engine(DATABASE_URL, echo=True, future=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
