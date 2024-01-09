@@ -48,16 +48,16 @@ services:
     depends_on:
       - fastapi
 
-  frontend:
-    image: node:18
-    container_name: frontend
-    # restart: always
-    # ports:
-      # - 3000:3000
-    working_dir: /app
-    volumes:
-      - ./frontend:/app
-    command: bash -c "npm install && npm run dev"
-    depends_on:
-      - nginx
+  # frontend:
+  #   image: node:18
+  #   container_name: frontend
+  #   # restart: always
+  #   # ports:
+  #     # - 3000:3000
+  #   working_dir: /app
+  #   volumes:
+  #     - ./frontend:/app
+  #   command: bash -c "npm install && npm run dev"
+  #   depends_on:
+  #     - nginx
     

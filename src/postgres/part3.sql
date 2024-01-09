@@ -57,7 +57,9 @@ FROM fnc_2();
 
 -- ===== FUNCTION 3 =====
 CREATE OR REPLACE FUNCTION fnc_3(p_date DATE)
-    RETURNS SETOF VARCHAR
+    RETURNS TABLE (
+        nickname VARCHAR
+    )
 AS
 $$
 BEGIN
@@ -210,7 +212,10 @@ FROM fnc_7();
 
 -- ===== FUNCTION 8 =====
 CREATE OR REPLACE FUNCTION fnc_8()
-    RETURNS SETOF TIME AS
+    RETURNS TABLE (
+        some_time TIME
+    )
+AS
 $$
 BEGIN
     RETURN QUERY
@@ -419,7 +424,9 @@ FROM fnc_14();
 -- ===== FUNCTION 15 =====
 CREATE OR REPLACE FUNCTION fnc_15(in task_1 VARCHAR, in task_2 VARCHAR,
                                   in task_3 VARCHAR)
-    RETURNS SETOF VARCHAR
+    RETURNS TABLE (
+        peer_nickname VARCHAR
+    )
 AS
 $$
 BEGIN
@@ -469,7 +476,10 @@ FROM fnc_16();
 
 -- ===== FUNCTION 17 =====
 CREATE OR REPLACE FUNCTION fnc_17(times_ IN INTEGER)
-    RETURNS SETOF DATE AS
+    RETURNS TABLE (
+        some_date DATE
+    )
+AS
 $$
 BEGIN
     RETURN QUERY
@@ -558,7 +568,10 @@ FROM fnc_19();
 
 -- ===== FUNCTION 20 =====
 CREATE OR REPLACE FUNCTION fnc_20()
-    RETURNS SETOF VARCHAR AS
+    RETURNS TABLE (
+        peer_nickname VARCHAR
+    )
+AS
 $$
 BEGIN
     RETURN QUERY
@@ -585,7 +598,10 @@ FROM fnc_20();
 
 -- ===== FUNCTION 21 =====
 CREATE OR REPLACE FUNCTION fnc_21(IN time_ TIME, IN times_ INTEGER)
-    RETURNS SETOF VARCHAR AS
+    RETURNS TABLE (
+        peer_nickname VARCHAR
+    )
+AS
 $$
 BEGIN
     RETURN QUERY
@@ -605,7 +621,10 @@ FROM fnc_21('09:00:00', 2);
 
 -- ===== FUNCTION 22 =====
 CREATE OR REPLACE FUNCTION fnc_22(IN days_ INTEGER, IN times_ INTEGER)
-    RETURNS SETOF VARCHAR AS
+    RETURNS TABLE (
+        peer_nickname VARCHAR
+    )
+AS
 $$
 BEGIN
     RETURN QUERY
@@ -624,7 +643,10 @@ FROM fnc_22(2, 1);
 
 -- ===== FUNCTION 23 =====
 CREATE OR REPLACE FUNCTION fnc_23()
-    RETURNS SETOF VARCHAR AS
+    RETURNS TABLE (
+        peer_nickname VARCHAR
+    )
+AS
 $$
 BEGIN
     RETURN QUERY
@@ -646,7 +668,10 @@ FROM fnc_23();
 
 -- ===== FUNCTION 24 =====
 CREATE OR REPLACE FUNCTION fnc_24(minnum INTEGER)
-    RETURNS SETOF VARCHAR AS
+    RETURNS TABLE (
+        peer_nickname VARCHAR
+    )
+AS
 $$
 BEGIN
     RETURN QUERY
