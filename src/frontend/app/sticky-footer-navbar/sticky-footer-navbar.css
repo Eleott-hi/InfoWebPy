@@ -1,0 +1,36 @@
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+:root {
+  --dark-background-color: #1D2633;
+  --light-background-color: #EBECF4;
+  --white-color: #FFFFFF;
+  --green-color: #44EB99;
+  --purple-color: #A24FEA;
+  --grey-color: #DEE3E8;
+}
+
+main > .container {
+  padding: 150px 15px 0;
+}
+
+.dark-bg-21 {
+  background-color: var(--dark-background-color);
+}
+
+.right  ul li a {
+  color: var(--white-color);
+  text-decoration: none;
+}
+
+.right  ul li.active a {
+  color: var(--green-color);
+  text-decoration: none;
+  border-bottom: 2px solid var(--green-color);
+}
+
+.right  ul li:hover a {
+  text-decoration: none;
+  color: var(--green-color);
+  transform: scale(1.20);
+}

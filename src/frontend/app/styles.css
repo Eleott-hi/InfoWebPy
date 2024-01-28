@@ -1,0 +1,236 @@
+:root {
+    --dark-background-color: #1D2633;
+    --light-background-color: #EBECF4;
+    --white-color: #FFFFFF;
+    --green-color: #44EB99;
+    --purple-color: #A24FEA;
+    --grey-color: #DEE3E8;
+}
+
+/* COMMON */
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    background-color: var(--light-background-color);
+    font-family: 'Noto Sans Display', sans-serif;
+}
+
+.content table {
+    width: 100%;
+}
+
+.content td {
+    vertical-align: top;
+}
+
+.output td {
+    border: 1px solid;
+    border-collapse: collapse;
+}
+
+.container-custom {
+    height: 100%;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.centered-container {
+    max-width: 1216px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* HEADER */
+
+header {
+    background-color: var(--dark-background-color);
+    color: var(--white-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+main {
+    flex: 1;
+    padding: 20px;
+}
+
+.main-double {
+    width: 100%;
+}
+
+.main-double table {
+    width: 100%;
+    margin: 5px;
+}
+
+.main-double td {
+    vertical-align: top;
+}
+
+.left {
+    width: 20%;
+}
+
+.middle {
+    width: 20%;
+}
+
+.right {
+    width: 20%;
+}
+
+.right nav {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.right nav ul {
+    display: flex;
+    font-size: 18px;
+    justify-content: flex-end;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.right nav ul li {
+    margin: 15px 15px;
+}
+
+.right nav ul li a {
+    color: var(--white-color);
+    text-decoration: none;
+}
+
+.right nav ul li.active a {
+    color: var(--green-color);
+    text-decoration: none;
+    border-bottom: 2px solid var(--green-color);
+}
+
+.right nav ul li:hover a {
+    text-decoration: none;
+    color: var(--green-color);
+    transform: scale(1.20);
+}
+
+/* FOOTER */
+
+footer {
+    background-color: var(--dark-background-color);
+}
+
+.footer p {
+    font-size: 14px;
+    color: var(--white-color);
+    margin: 0;
+    padding: 7px;
+    text-align: center;
+}
+
+/* TABLE BALANCE */
+
+.center-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.button-container {
+    display: flex; /* Use Flexbox for layout */
+    justify-content: flex-end; /* Align buttons to the right */
+}
+
+.button-container .btn {
+    margin-left: 5px; /* Add some spacing between buttons */
+}
+
+/* CARDS */
+
+.card {
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+}
+
+.card .card-title {
+    color: var(--dark-background-color);
+}
+
+a {
+    text-decoration: none; /* Remove underline */
+    display: inline-block;
+    margin-right: 10px;
+}
+
+/* ARROW ICON */
+
+.icon-container {
+    margin-right: 10px;
+}
+
+.icon-container .bi {
+    fill: var(--dark-background-color);
+    transition: fill 0.3s;
+}
+
+.icon-container:hover .bi {
+    fill: var(--purple-color);
+}
+
+/* BUTTONS */
+
+.btn {
+    width: 130px;
+    transition: background-color 0.3s;
+    box-sizing: border-box;
+}
+
+.btn:hover {
+    background-color: var(--purple-color);
+}
+
+.custom-button {
+    background-color: var(--green-color);
+    border: none;
+}
+
+.space {
+    margin-bottom: 7px;
+}
+
+.sub-button {
+    background-color: var(--white-color);
+    border: 1px solid var(--grey-color);
+}
+
+/* MODAL */
+
+.modal-content {
+    border-radius: 15px;
+}
+
+.modal-header, .modal-footer {
+    border: none;
+    margin: 10px;
+}
+
+.modal-body {
+    margin: 10px;
+}

@@ -15,8 +15,12 @@ all: clean_db
 runserver:
 	cd $(SERVER_DIR); python3 main.py
 
-runui:
+runui_dev:
 	cd $(UI_DIR); npm run dev
+
+runui_prod:
+	cd $(UI_DIR); npm run build
+	cd $(UI_DIR); npm run start
 
 postgres: clean_db
 	docker-compose up 
