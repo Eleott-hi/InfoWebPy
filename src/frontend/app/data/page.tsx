@@ -4,13 +4,13 @@ export default function Data() {
     const tables = ['Table1', 'Table2', 'Table3', 'Table4', 'Table5'];
 
     const renderTableCard = (table: string) => (
-        <div className="col-md-4">
-            <div className="card mb-4">
-                <a href={""}>
-                    <div className="card-body">
-                        <h5 className="card-title"><b>{table}</b></h5>
-                    </div>
-                </a>
+        <div className="col">
+            <div className="card s21-card">
+                <div className="card-body text-center">
+                    <a href={"/data/" + table}>
+                        <h5 className="card-title">{table}</h5>
+                    </a>
+                </div>
             </div>
         </div>
     );
@@ -24,7 +24,7 @@ export default function Data() {
             </div>
 
             <div className="container mt-5">
-                <div className="row">
+                <div className="row row-cols-1 row-cols-md-3 g-4">
                     {
                         tables.map(renderTableCard)
                     }

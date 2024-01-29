@@ -5,6 +5,7 @@
     --green-color: #44EB99;
     --purple-color: #A24FEA;
     --grey-color: #DEE3E8;
+    --blue-color: #1b63c8;
 }
 
 /* COMMON */
@@ -14,6 +15,7 @@ body {
     height: 100%;
 }
 
+/* 
 body {
     margin: 0;
     background-color: var(--light-background-color);
@@ -47,10 +49,10 @@ body {
     max-width: 1216px;
     margin: 0 auto;
     padding: 20px;
-}
+} */
 
 /* HEADER */
-
+/* 
 header {
     background-color: var(--dark-background-color);
     color: var(--white-color);
@@ -122,11 +124,11 @@ main {
     text-decoration: none;
     color: var(--green-color);
     transform: scale(1.20);
-}
+} */
 
 /* FOOTER */
 
-footer {
+/* footer {
     background-color: var(--dark-background-color);
 }
 
@@ -136,11 +138,11 @@ footer {
     margin: 0;
     padding: 7px;
     text-align: center;
-}
+} */
 
 /* TABLE BALANCE */
 
-.center-content {
+/* .center-content {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -153,35 +155,36 @@ footer {
 }
 
 .button-container {
-    display: flex; /* Use Flexbox for layout */
-    justify-content: flex-end; /* Align buttons to the right */
+    display: flex;
+    justify-content: flex-end;
 }
 
 .button-container .btn {
-    margin-left: 5px; /* Add some spacing between buttons */
-}
+    margin-left: 5px; 
+} */
 
 /* CARDS */
 
-.card {
+.card.s21-card {
     border: none;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 15px;
 }
+/* 
 
 .card .card-title {
     color: var(--dark-background-color);
 }
 
 a {
-    text-decoration: none; /* Remove underline */
+    text-decoration: none;
     display: inline-block;
     margin-right: 10px;
-}
+} */
 
 /* ARROW ICON */
 
-.icon-container {
+/* .icon-container {
     margin-right: 10px;
 }
 
@@ -192,36 +195,39 @@ a {
 
 .icon-container:hover .bi {
     fill: var(--purple-color);
-}
+} */
 
 /* BUTTONS */
 
 .btn {
-    width: 130px;
+    min-width: 130px;
     transition: background-color 0.3s;
     box-sizing: border-box;
 }
 
-.btn:hover {
-    background-color: var(--purple-color);
-}
-
-.custom-button {
+.btn.s21-btn {
     background-color: var(--green-color);
     border: none;
 }
 
-.space {
+.btn.s21-btn:hover {
+    background-color: var(--purple-color);
+    color: var(--blue-color)
+}
+
+
+
+/* .space {
     margin-bottom: 7px;
 }
 
 .sub-button {
     background-color: var(--white-color);
     border: 1px solid var(--grey-color);
-}
+} */
 
 /* MODAL */
-
+/* 
 .modal-content {
     border-radius: 15px;
 }
@@ -233,4 +239,4 @@ a {
 
 .modal-body {
     margin: 10px;
-}
+} */
