@@ -1,7 +1,12 @@
 
 import React from 'react';
+import { useState } from 'react';
 
-const Table = ({ data }) => {
+const Table = ({ data,
+    openDeleteItemConfirmDialog,
+    openEditItemDialog,
+    openEditItemConfirmDialog,
+}) => {
     const columns = data.length > 0 ? Object.keys(data[0]) : [];
 
     return data.length > 0 ?
@@ -21,15 +26,19 @@ const Table = ({ data }) => {
                     </thead>
                     <tbody>
                         {data.map((item) => (
-                            <tr>
+                            <tr key={item[Object.keys(item)[0]]}>
                                 {columns.map((column) => (
                                     <td key={column} className='text-center'>{item[column]}</td>
                                 ))}
                                 <td className='text-center'>
-                                    <button type='button' className='btn s21-btn'>Edit</button>
+                                    <button type='button'
+                                        className='btn s21-btn'
+                                        onClick={() => openEditItemDialog(item)}>Edit</button>
                                 </td>
                                 <td className='text-center'>
-                                    <button type='button' className='btn s21-btn'>Delete</button>
+                                    <button type='button'
+                                        className='btn s21-btn'
+                                        onClick={() => openDeleteItemConfirmDialog(item[Object.keys(item)[0]])}>Delete</button>
                                 </td>
                             </tr>
                         ))}
@@ -42,8 +51,7 @@ const Table = ({ data }) => {
                     <h1>No data</h1>
                 </div>
             </div>
-        )
-        ;
+        );
 };
 
 export default Table;

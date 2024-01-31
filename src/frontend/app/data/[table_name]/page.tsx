@@ -3,6 +3,9 @@
 import Image from "next/image";
 import { useState } from 'react';
 import Table from '../../../components/Table';
+import ConfirmDialog from '../../../components/ConfirmDialog';
+import TableItemHandler from '../../../components/TableItemHandler';
+
 
 export default function TablePage({ params }) {
     const [data, setData] = useState([
@@ -18,6 +21,119 @@ export default function TablePage({ params }) {
         { id: 10, firstName: 'Jane', lastName: 'Smith', age: 30, some: "thing" },
     ]);
 
+    const [isConfirmDialog, setIsConfirmDialog] = useState(false);
+    const [confirmDialog, setConfirmDialog] = useState({});
+    const [isItemDialog, setIsItemDialog] = useState(false);
+    const [itemDialog, setItemDialog] = useState({});
+
+    const openDeleteItemConfirmDialog = (id: string) => {
+        setConfirmDialog({
+            header: "Confirm Deletion of item with id: " + id + "?",
+            content: "Are you sure you want to delete this item? This action cannot be undone.",
+            handleClose: (isConfirmed: boolean) => {
+                if (isConfirmed) {
+                    console.log("Confirm deletion of item: " + id);
+                } else {
+                    console.log("Cencel deletion of item: " + id);
+                }
+                setIsConfirmDialog(false);
+            },
+        });
+        setIsConfirmDialog(true);
+    };
+
+    const openDeleteTableConfirmDialog = () => {
+        setConfirmDialog({
+            header: "Confirm Deletion of table: " + params.table_name + "?",
+            content: "Are you sure you want to delete this table? All contents of this table and related with this table will be lost.",
+            handleClose: (isConfirmed: boolean) => {
+                if (isConfirmed) {
+                    console.log("Confirm deletion of table: " + params.table_name);
+                } else {
+                    console.log("Cencel deletion of table: " + params.table_name);
+                }
+                setIsConfirmDialog(false);
+            },
+        });
+        setIsConfirmDialog(true);
+    };
+
+    const openItemConfirmDialog = (dialogState: any) => {
+        setConfirmDialog({ ...dialogState });
+        setIsConfirmDialog(true);
+    };
+
+    const openEditItemDialog = (item: any) => {
+        const id = item[Object.keys(item)[0]]
+
+        setItemDialog({
+            header: "Edit item with id: " + id,
+            content: item,
+            handleClose: (isConfirmed: boolean) => {
+                if (isConfirmed) {
+                    const edit = () => console.log("Confirm editting item with id: " + id);
+
+                    const confirmDialogState = {
+                        header: "Edit item with id: " + id + " ?",
+                        content: "Are you sure you want to edit this item?",
+                        handleClose: (is_confirmed: boolean) => {
+                            if (is_confirmed) {
+                                edit();
+                                setIsConfirmDialog(false);
+                                setIsItemDialog(false);
+                            } else {
+                                setIsConfirmDialog(false);
+                            }
+                        },
+                    }
+
+                    openItemConfirmDialog(confirmDialogState);
+
+                } else {
+                    console.log("Cencel editting item with id: " + id);
+                    setIsItemDialog(false);
+                }
+            },
+        });
+
+        setIsItemDialog(true);
+    };
+
+    const openCreateItemDialog = () => {
+        const item = data[0]
+
+        setItemDialog({
+            header: "Create item",
+            content: item,
+            handleClose: (isConfirmed: boolean) => {
+                if (isConfirmed) {
+                    const edit = () => console.log("Confirm creating new item");
+
+                    const confirmDialogState = {
+                        header: "Create item?",
+                        content: "Are you sure you want to create new item?",
+                        handleClose: (is_confirmed: boolean) => {
+                            if (is_confirmed) {
+                                edit();
+                                setIsConfirmDialog(false);
+                                setIsItemDialog(false);
+                            } else {
+                                setIsConfirmDialog(false);
+                            }
+                        },
+                    }
+
+                    openItemConfirmDialog(confirmDialogState);
+
+                } else {
+                    console.log("Cencel creating new item");
+                    setIsItemDialog(false);
+                }
+            },
+        });
+
+        setIsItemDialog(true);
+    };
 
     return (
         <div className="p-4">
@@ -31,24 +147,38 @@ export default function TablePage({ params }) {
             </div>
 
             <div className="row">
-                <div className="col-md-9 bg-light"
+                <div className="col-md-9 card s21-card mb-5"
                     style={{ minWidth: 'fit-content' }}
                 >
-                    <Table data={data} />
+                    <Table data={data}
+                        openDeleteItemConfirmDialog={openDeleteItemConfirmDialog}
+                        openEditItemDialog={openEditItemDialog}
+                    />
                 </div>
 
-                <div className="col-md-3 ">
+                <div className="col-md-3">
                     <div className="card s21-card align-items-center p-4"
                     // style={{ maxWidth: "300px" }}
                     >
                         <h4 className="text-center">Operations for the entire table</h4>
-                        <button type="button" className="btn s21-btn mt-2">Drop table</button>
-                        <button type="button" className="btn s21-btn mt-2">Create item</button>
+                        <button type="button"
+                            className="btn s21-btn mt-2"
+                            onClick={openDeleteTableConfirmDialog}>
+                            Drop table
+                        </button>
+                        <button type="button"
+                            className="btn s21-btn mt-2"
+                            onClick={openCreateItemDialog}>
+                            Create item
+                        </button>
                         <button type="button" className="btn s21-btn mt-2">Import table</button>
                         <button type="button" className="btn s21-btn mt-2">Export table</button>
                     </div>
                 </div>
             </div>
+
+            {isItemDialog && (<TableItemHandler props={itemDialog} />)}
+            {isConfirmDialog && (<ConfirmDialog props={confirmDialog} />)}
         </div>
     );
 }

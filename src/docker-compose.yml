@@ -40,7 +40,7 @@ services:
     container_name: nginx
     # restart: always
     ports:
-      - 8000:8000
+      - 8001:8000
       - 3000:3000
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
@@ -48,16 +48,16 @@ services:
     depends_on:
       - fastapi
 
-  # frontend:
-  #   image: node:18
-  #   container_name: frontend
-  #   # restart: always
-  #   # ports:
-  #     # - 3000:3000
-  #   working_dir: /app
-  #   volumes:
-  #     - ./frontend:/app
-  #   command: bash -c "npm install && npm run dev"
-  #   depends_on:
-  #     - nginx
+  frontend:
+    image: node:18
+    container_name: frontend
+    # restart: always
+    # ports:
+      # - 3000:3000
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    command: bash -c "npm install && npm run dev"
+    # depends_on:
+    #   - nginx
     

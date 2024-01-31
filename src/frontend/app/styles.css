@@ -215,16 +215,16 @@ a {
     color: var(--blue-color)
 }
 
-
-
-/* .space {
-    margin-bottom: 7px;
-}
-
-.sub-button {
+.btn.s21-subbtn {
     background-color: var(--white-color);
     border: 1px solid var(--grey-color);
-} */
+} 
+
+.btn.s21-subbtn:hover {
+    background-color: var(--purple-color);
+    color: var(--blue-color);
+    border: 1px solid var(--grey-color);
+} 
 
 /* MODAL */
 /* 

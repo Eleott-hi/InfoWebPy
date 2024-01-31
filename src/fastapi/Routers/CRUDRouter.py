@@ -71,4 +71,4 @@ class CRUDRouter():
                 return {"message": f"{file.filename} imported successfully"}
 
             except Exception as e:
-                return HTTPException(status_code=500, detail=str(e))fnc_8
+                return HTTPException(status_code=500, detail=str(e))
