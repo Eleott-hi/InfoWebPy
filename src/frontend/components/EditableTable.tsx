@@ -2,7 +2,11 @@
 import React from 'react';
 import { useState } from 'react';
 
-export default function Table({ data }) {
+export default function EditableTable({ data,
+    openDeleteItemConfirmDialog,
+    openEditItemDialog,
+    openEditItemConfirmDialog,
+}) {
     const columns = data.length > 0 ? Object.keys(data[0]) : [];
 
     return data.length > 0 ?
@@ -16,14 +20,26 @@ export default function Table({ data }) {
                                     {column}
                                 </th>
                             ))}
+                            <th scope="col" className='text-center'></th>
+                            <th scope="col" className='text-center'></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((item: any) => (
+                        {data.map((item) => (
                             <tr key={item[Object.keys(item)[0]]}>
                                 {columns.map((column) => (
                                     <td key={column} className='text-center'>{item[column]}</td>
                                 ))}
+                                <td className='text-center'>
+                                    <button type='button'
+                                        className='btn s21-btn'
+                                        onClick={() => openEditItemDialog(item)}>Edit</button>
+                                </td>
+                                <td className='text-center'>
+                                    <button type='button'
+                                        className='btn s21-btn'
+                                        onClick={() => openDeleteItemConfirmDialog(item[Object.keys(item)[0]])}>Delete</button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>

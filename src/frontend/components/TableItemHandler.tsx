@@ -19,6 +19,22 @@ export default function TableItemHandler(
         }
     };
 
+    console.log("HERE", props.content)
+
+    const states = {}
+
+    for (const column in props.content) {
+        states[column] = useState(props.content[column]);
+    }
+
+    const itemFromStates = (states: any) => {
+        const item = {}
+        for (const column in props.content) {
+            item[column] = states[column][0]
+        }
+        return item
+    }
+
     return (
         <div>
             <div
@@ -45,8 +61,9 @@ export default function TableItemHandler(
                                         <label htmlFor={column} className='col'>{column}</label>
                                         <input id={column}
                                             className='col'
-                                            type="text"
-                                            value={props.content[column]}
+                                            // type="text"
+                                            value={states[column][0]}
+                                            onChange={(e) => { states[column][1](e.target.value) }}
                                         />
                                     </div>
                                 </div>
@@ -55,7 +72,7 @@ export default function TableItemHandler(
                     </div>
                     <div className="row">
                         <div className="col text-center">
-                            <button type='button' className='btn s21-btn' onClick={() => { props.handleClose(true) }}>Confirm</button>
+                            <button type='button' className='btn s21-btn' onClick={() => { props.handleClose(true, itemFromStates(states)) }}>Confirm</button>
                         </div>
                         <div className="col text-center">
                             <button type='button' className='btn s21-subbtn' onClick={() => { props.handleClose(false) }}>Cancel</button>

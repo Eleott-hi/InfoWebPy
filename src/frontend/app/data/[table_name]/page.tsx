@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import { useState } from 'react';
-import Table from '../../../components/Table';
-import ConfirmDialog from '../../../components/ConfirmDialog';
-import TableItemHandler from '../../../components/TableItemHandler';
+import EditableTable from '@/components/EditableTable';
+import ConfirmDialog from '@/components/ConfirmDialog';
+import TableItemHandler from '@/components/TableItemHandler';
 
 
 export default function TablePage({ params }) {
@@ -69,9 +69,9 @@ export default function TablePage({ params }) {
         setItemDialog({
             header: "Edit item with id: " + id,
             content: item,
-            handleClose: (isConfirmed: boolean) => {
+            handleClose: (isConfirmed: boolean, item: any = null) => {
                 if (isConfirmed) {
-                    const edit = () => console.log("Confirm editting item with id: " + id);
+                    const edit = () => console.log("Confirm editting item with id: " + id, item);
 
                     const confirmDialogState = {
                         header: "Edit item with id: " + id + " ?",
@@ -90,7 +90,7 @@ export default function TablePage({ params }) {
                     openItemConfirmDialog(confirmDialogState);
 
                 } else {
-                    console.log("Cencel editting item with id: " + id);
+                    console.log("Cencel editting item with id: " + id, item);
                     setIsItemDialog(false);
                 }
             },
@@ -105,16 +105,16 @@ export default function TablePage({ params }) {
         setItemDialog({
             header: "Create item",
             content: item,
-            handleClose: (isConfirmed: boolean) => {
+            handleClose: (isConfirmed: boolean, item: any = null) => {
                 if (isConfirmed) {
-                    const edit = () => console.log("Confirm creating new item");
+                    const create = () => console.log("Confirm creating new item", item);
 
                     const confirmDialogState = {
                         header: "Create item?",
                         content: "Are you sure you want to create new item?",
                         handleClose: (is_confirmed: boolean) => {
                             if (is_confirmed) {
-                                edit();
+                                create();
                                 setIsConfirmDialog(false);
                                 setIsItemDialog(false);
                             } else {
@@ -126,7 +126,7 @@ export default function TablePage({ params }) {
                     openItemConfirmDialog(confirmDialogState);
 
                 } else {
-                    console.log("Cencel creating new item");
+                    console.log("Cencel creating new item", item);
                     setIsItemDialog(false);
                 }
             },
@@ -150,7 +150,7 @@ export default function TablePage({ params }) {
                 <div className="col-md-9 card s21-card mb-5"
                     style={{ minWidth: 'fit-content' }}
                 >
-                    <Table data={data}
+                    <EditableTable data={data}
                         openDeleteItemConfirmDialog={openDeleteItemConfirmDialog}
                         openEditItemDialog={openEditItemDialog}
                     />

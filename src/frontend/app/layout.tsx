@@ -67,6 +67,9 @@ export default function RootLayout({
                   <li className="nav-item">
                     <a className="nav-link" href="/operations">Operations</a>
                   </li>
+                  <li className="nav-item">
+                    <a className="nav-link" href="/sql-request">SQL Request</a>
+                  </li>
                 </ul>
               </div>
             </div>
