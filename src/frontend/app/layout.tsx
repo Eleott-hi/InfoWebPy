@@ -1,22 +1,35 @@
+"use client";
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./styles.css";
 
+import { usePathname } from 'next/navigation';
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Head from "next/head";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "Info21 v2.0 Web",
-  description: "",
-};
+// export const metadata: Metadata = {
+//   title: "Info21 v2.0 Web",
+//   description: "",
+// };
+
+
+const navLinks = [
+  { href: "/data", name: "Data" },
+  { href: "/operations", name: "Operations" },
+  { href: "/sql-request", name: "SQL Request" },
+];
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const pathname = usePathname();
+
   return (
     <html lang="en">
       <Head>
@@ -38,38 +51,58 @@ export default function RootLayout({
       <body className="d-flex flex-column h-100"
         style={{
           backgroundColor: "var(--light-background-color)",
-        }}
-      >
-
+        }}>
 
         <header>
-          <nav className="navbar navbar-expand-md navbar-dark fixed-top"
+          <nav className="navbar navbar-expand-md navbar-dark fixed-top p-0"
             style={{
               backgroundColor: "var(--dark-background-color)",
               minHeight: "150px"
             }}>
-            <div className="container-fluid ">
-              <img src="/main.png" alt="Logo" height={150} className='' />
-              <a className="navbar-brand d-flex align-items-center justify-content-center" href="/">
-                Info21 v2.0 Web
+            <div className="container-fluid">
+
+              <a className="" href="/">
+                <img className='' src="/main.png" alt="Logo" height={150} />
               </a>
 
-              <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
-                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+              <div className='text-center'
+                style={{
+                  minWidth: "200px"
+                }}>
+                <a className="navbar-brand" href="/">
+                  Info21 v2.0 Web
+                </a>
+              </div>
+
+              <button className="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarCollapse"
+                aria-controls="navbarCollapse"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
                 <span className="navbar-toggler-icon"></span>
               </button>
 
               <div className="collapse navbar-collapse" id="navbarCollapse">
                 <ul className="navbar-nav ms-auto mb-2 mb-md-0">
-                  <li className="nav-item">
-                    <a className="nav-link active" aria-current="page" href="/data">Data</a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="/operations">Operations</a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="/sql-request">SQL Request</a>
-                  </li>
+                  {
+                    navLinks.map(
+                      (link) => {
+                        const isActive = pathname.startsWith(link.href);
+
+                        return (
+                          <li key={link.name} className="nav-item">
+                            <a href={link.href}
+                              className={"nav-link " + (isActive ? "active s21-active-link" : "")}
+                              aria-current="page">
+                              {link.name}
+                            </a>
+                          </li>
+                        )
+                      }
+                    )
+                  }
                 </ul>
               </div>
             </div>
@@ -89,7 +122,7 @@ export default function RootLayout({
             color: "var(--white-color)",
           }}>
           <div className="container text-center">
-            <span>pintoved, someone. All rights reserved.</span>
+            <span>© pintoved, someone. All rights reserved.</span>
           </div>
         </footer>
 

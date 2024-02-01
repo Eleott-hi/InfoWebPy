@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import { useState } from 'react';
 import Table from "@/components/Table";
 
@@ -33,6 +32,9 @@ export default function SQLRequest() {
 
     return (
         <div className="p-4 row">
+            <div className="col-12 text-center">
+                <h1>SQL Request</h1>
+            </div>
             <div className="col-lg-6 col-sm-12 d-flex flex-column mt-3">
                 <div className="form-floating">
                     <textarea
@@ -43,7 +45,7 @@ export default function SQLRequest() {
                         onChange={handleTextareaChange}
                     ></textarea>
                     <label className="text-center" htmlFor="floatingTextarea">
-                        SQL Request
+                        Enter SQL Request:
                     </label>
                 </div>
                 <button type="button"

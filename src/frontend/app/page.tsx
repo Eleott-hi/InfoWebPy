@@ -18,7 +18,7 @@ export default function Home() {
       <h2 className="mt-5">Team</h2>
       <p className="mt-2">
         pintoved@student.21-school.ru <br />
-        someoneelse@student.21-school.ru
+        someone@student.21-school.ru
       </p>
     </div>
   );

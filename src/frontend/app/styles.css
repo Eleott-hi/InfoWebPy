@@ -126,6 +126,12 @@ main {
     transform: scale(1.20);
 } */
 
+a.s21-active-link {
+    color: var(--green-color);
+    text-decoration: none;
+    border-bottom: 2px solid var(--green-color);
+}
+
 /* FOOTER */
 
 /* footer {
@@ -170,6 +176,7 @@ main {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 15px;
 }
+
 /* 
 
 .card .card-title {
@@ -218,13 +225,13 @@ a {
 .btn.s21-subbtn {
     background-color: var(--white-color);
     border: 1px solid var(--grey-color);
-} 
+}
 
 .btn.s21-subbtn:hover {
     background-color: var(--purple-color);
     color: var(--blue-color);
     border: 1px solid var(--grey-color);
-} 
+}
 
 /* MODAL */
 /* 
