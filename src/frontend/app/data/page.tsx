@@ -1,10 +1,26 @@
-import React from 'react';
+"use client";
+import React, { useState, useEffect } from 'react';
 
 export default function Data() {
-    const tables = ['Table1', 'Table2', 'Table3', 'Table4', 'Table5'];
+
+    const [tables, setTables] = useState([]);
+
+    useEffect(() => {
+        fetch("http://localhost:8000/tables", {
+            method: "GET"
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log( data.tables);
+                setTables(data.tables);
+            })
+            .catch(error => console.error('Error fetching tables:', error));
+    }, []);
+
+
 
     const renderTableCard = (table: string) => (
-        <div className="col">
+        <div className="col" key={table}>
             <div className="card s21-card">
                 <div className="card-body text-center">
                     <a href={"/data/" + table}>
@@ -18,8 +34,8 @@ export default function Data() {
 
 
     return (
-        <div className="center-content">
-            <div className="container text-center mt-5">
+        <div className="container p-4">
+            <div className="container text-center">
                 <h1>Tables</h1>
             </div>
 

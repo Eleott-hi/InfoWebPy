@@ -56,6 +56,14 @@ class CRUDRouter():
                 return {"message": f"{self.db_model} with id={id} deleted successfully"}
             except Exception as e:
                 raise HTTPException(status_code=404, detail=str(e))
+        
+        @self.router.delete("/", response_model=dict)
+        async def delete_table(db: Session = Depends(self.db)):
+            try:
+                await SQLRequests.delete_table(db, self.db_model)
+                return {"message": f"{self.db_model} was deleted successfully"}
+            except Exception as e:
+                raise HTTPException(status_code=404, detail=str(e))
 
 
         @self.router.post("/upload")

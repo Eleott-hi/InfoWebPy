@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS peers
 CREATE TABLE IF NOT EXISTS tasks
 (
     title       VARCHAR PRIMARY KEY,
-    parent_task VARCHAR REFERENCES tasks (title),
+    parent_task VARCHAR REFERENCES tasks (title) ON DELETE CASCADE,
     max_xp      INTEGER NOT NULL
 );
 
@@ -29,8 +29,8 @@ CREATE TYPE check_status AS ENUM ('Start', 'Success', 'Failure');
 CREATE TABLE IF NOT EXISTS checks
 (
     id     SERIAL PRIMARY KEY,
-    peer   VARCHAR NOT NULL REFERENCES peers (nickname),
-    task   VARCHAR NOT NULL REFERENCES tasks (title),
+    peer   VARCHAR NOT NULL REFERENCES peers (nickname) ON DELETE CASCADE,
+    task   VARCHAR NOT NULL REFERENCES tasks (title) ON DELETE CASCADE,
     "date" DATE    NOT NULL
 );
 
@@ -39,8 +39,8 @@ CREATE TABLE IF NOT EXISTS checks
 CREATE TABLE IF NOT EXISTS p2p
 (
     id            SERIAL PRIMARY KEY,
-    "check"       INTEGER      NOT NULL REFERENCES checks (id),
-    checking_peer VARCHAR      NOT NULL REFERENCES peers (nickname),
+    "check"       INTEGER      NOT NULL REFERENCES checks (id) ON DELETE CASCADE,
+    checking_peer VARCHAR      NOT NULL REFERENCES peers (nickname) ON DELETE CASCADE,
     state         check_status NOT NULL,
     "time"        TIME         NOT NULL
 );
@@ -53,7 +53,7 @@ CREATE UNIQUE INDEX idx_p2p_check_state_start_unique
 CREATE TABLE IF NOT EXISTS verter
 (
     id      SERIAL PRIMARY KEY,
-    "check" INTEGER      NOT NULL REFERENCES checks (id),
+    "check" INTEGER      NOT NULL REFERENCES checks (id) ON DELETE CASCADE,
     state   check_status NOT NULL,
     "time"  TIME         NOT NULL
 );
@@ -77,8 +77,8 @@ ALTER TABLE verter
 CREATE TABLE IF NOT EXISTS transferred_points
 (
     id            SERIAL PRIMARY KEY,
-    checking_peer VARCHAR NOT NULL REFERENCES peers (nickname),
-    checked_peer  VARCHAR NOT NULL REFERENCES peers (nickname),
+    checking_peer VARCHAR NOT NULL REFERENCES peers (nickname) ON DELETE CASCADE,
+    checked_peer  VARCHAR NOT NULL REFERENCES peers (nickname) ON DELETE CASCADE,
     points_amount INTEGER NOT NULL
 );
 
@@ -87,8 +87,8 @@ CREATE TABLE IF NOT EXISTS transferred_points
 CREATE TABLE IF NOT EXISTS friends
 (
     id    SERIAL PRIMARY KEY,
-    peer1 VARCHAR NOT NULL REFERENCES peers (nickname),
-    peer2 VARCHAR NOT NULL REFERENCES peers (nickname)
+    peer1 VARCHAR NOT NULL REFERENCES peers (nickname) ON DELETE CASCADE,
+    peer2 VARCHAR NOT NULL REFERENCES peers (nickname) ON DELETE CASCADE
 );
 
 
@@ -96,8 +96,8 @@ CREATE TABLE IF NOT EXISTS friends
 CREATE TABLE IF NOT EXISTS recommendations
 (
     id               SERIAL PRIMARY KEY,
-    peer             VARCHAR NOT NULL REFERENCES peers (nickname),
-    recommended_peer VARCHAR NOT NULL REFERENCES peers (nickname)
+    peer             VARCHAR NOT NULL REFERENCES peers (nickname) ON DELETE CASCADE,
+    recommended_peer VARCHAR NOT NULL REFERENCES peers (nickname) ON DELETE CASCADE
 );
 
 
@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS recommendations
 CREATE TABLE IF NOT EXISTS xp
 (
     id        SERIAL PRIMARY KEY,
-    "check"   INTEGER NOT NULL REFERENCES checks (id),
+    "check"   INTEGER NOT NULL REFERENCES checks (id) ON DELETE CASCADE,
     xp_amount INTEGER NOT NULL
 );
 
@@ -129,7 +129,7 @@ ALTER TABLE xp
 CREATE TABLE IF NOT EXISTS time_tracking
 (
     id     SERIAL PRIMARY KEY,
-    peer   VARCHAR NOT NULL REFERENCES peers (nickname),
+    peer   VARCHAR NOT NULL REFERENCES peers (nickname) ON DELETE CASCADE,
     "date" DATE    NOT NULL,
     "time" TIME    NOT NULL,
     state  INTEGER NOT NULL -- 1-in, 2-out

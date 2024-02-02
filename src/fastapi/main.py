@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from Routers.CRUDRouter import CRUDRouter
 from ORM.Models import create_pydantic_api_models
 from ORM.Database import get_db, engine
@@ -11,7 +12,7 @@ def LinkRouters(app, models):
                 create_schema=model["create_model"],
                 db_model=model["db_model"],
                 db=get_db,
-                prefix=f'/{model["db_model"]}',
+                prefix=f'/tables/{model["db_model"]}',
             ).router
         )
 
@@ -20,8 +21,20 @@ app = FastAPI()
 models = create_pydantic_api_models(engine)
 LinkRouters(app, models)
 
+origins = [
+    "http://localhost",
+    "http://localhost:3000",  # Add your frontend origin(s)
+]
 
-@app.get("/")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/tables")
 async def root():
     return {"tables": [str(model["db_model"]) for model in models]}
 

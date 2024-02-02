@@ -66,3 +66,11 @@ async def create(
     db.commit()
 
     return result.fetchone()
+
+async def delete_table(
+    db: Session,
+    cls: Table
+):
+    delete_query = delete(cls)
+    db.execute(delete_query)
+    db.commit()
