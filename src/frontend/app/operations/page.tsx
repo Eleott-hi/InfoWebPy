@@ -35,7 +35,7 @@ function WrapFunctions(functions, dialogFnc) {
       {
         (
           functions.map((func) => (
-            <li className='mt-1'>
+            <li className='mt-1' key={func}>
               <button
                 type="button"
                 className='btn s21-btn'

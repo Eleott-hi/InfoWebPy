@@ -1,114 +1,38 @@
-"use client";
+
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./styles.css";
 
-import { usePathname } from 'next/navigation';
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Head from "next/head";
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
 
 const inter = Inter({ subsets: ["latin"] });
 
-// export const metadata: Metadata = {
-//   title: "Info21 v2.0 Web",
-//   description: "",
-// };
-
-
-const navLinks = [
-  { href: "/data", name: "Data" },
-  { href: "/operations", name: "Operations" },
-  { href: "/sql-request", name: "SQL Request" },
-];
+export const metadata: Metadata = {
+  title: "Info21 v2.0 Web",
+  description: "",
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-  const pathname = usePathname();
-
   return (
     <html lang="en">
       <Head>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sticky-footer-navbar/" />
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossOrigin="anonymous" />
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-        crossOrigin="anonymous"></script>
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossOrigin="anonymous" />
-
-
-
-
       <body className="d-flex flex-column h-100"
         style={{
           backgroundColor: "var(--light-background-color)",
         }}>
 
-        <header>
-          <nav className="navbar navbar-expand-md navbar-dark fixed-top p-0"
-            style={{
-              backgroundColor: "var(--dark-background-color)",
-              minHeight: "150px"
-            }}>
-            <div className="container-fluid">
-
-              <a className="" href="/">
-                <img className='' src="/main.png" alt="Logo" height={150} />
-              </a>
-
-              <div className='text-center'
-                style={{
-                  minWidth: "200px"
-                }}>
-                <a className="navbar-brand" href="/">
-                  Info21 v2.0 Web
-                </a>
-              </div>
-
-              <button className="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarCollapse"
-                aria-controls="navbarCollapse"
-                aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span className="navbar-toggler-icon"></span>
-              </button>
-
-              <div className="collapse navbar-collapse" id="navbarCollapse">
-                <ul className="navbar-nav ms-auto mb-2 mb-md-0">
-                  {
-                    navLinks.map(
-                      (link) => {
-                        const isActive = pathname.startsWith(link.href);
-
-                        return (
-                          <li key={link.name} className="nav-item">
-                            <a href={link.href}
-                              className={"nav-link " + (isActive ? "active s21-active-link" : "")}
-                              aria-current="page">
-                              {link.name}
-                            </a>
-                          </li>
-                        )
-                      }
-                    )
-                  }
-                </ul>
-              </div>
-            </div>
-          </nav>
-        </header>
-
+        <Header />
 
         <main className="flex-shrink-0" style={{
           margin: "160px 0px 0px 0px",
@@ -116,15 +40,7 @@ export default function RootLayout({
           {children}
         </main>
 
-        <footer className="footer mt-auto py-3"
-          style={{
-            backgroundColor: "var(--dark-background-color)",
-            color: "var(--white-color)",
-          }}>
-          <div className="container text-center">
-            <span>© pintoved, someone. All rights reserved.</span>
-          </div>
-        </footer>
+        <Footer />
 
       </body >
     </html >
