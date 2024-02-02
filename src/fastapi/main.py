@@ -3,6 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from Routers.CRUDRouter import CRUDRouter
 from ORM.Models import create_pydantic_api_models
 from ORM.Database import get_db, engine
+from ORM.SQLRequests import process_row_sql_request
+
+from fastapi import  Depends
+from sqlalchemy.orm import Session
 
 def LinkRouters(app, models):
     for model in models:
@@ -35,8 +39,22 @@ app.add_middleware(
 )
 
 @app.get("/tables")
-async def root():
+async def tables():
     return {"tables": [str(model["db_model"]) for model in models]}
+
+
+# @app.get("/sql-request")
+# async def sql_request(request: str):
+#     print(request)
+#     return {
+#         "request": request
+#     }
+    
+@app.get("/sql-request")
+async def sql_request(request: str, db: Session = Depends(get_db)):
+    res = await process_row_sql_request(db, request)
+    print(res)
+    return {"response": res}
 
 if __name__ == "__main__":
     import uvicorn

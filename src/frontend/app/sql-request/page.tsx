@@ -2,20 +2,20 @@
 import { useState } from 'react';
 import Table from "@/components/Table";
 
+const example_table = [
+    { id: 1, firstName: 'John', lastName: 'Doe', age: 25 },
+    { id: 2, firstName: 'Jane', lastName: 'Smith', age: 30 },
+    { id: 3, firstName: 'Jane', lastName: 'Smith', age: 30 },
+    { id: 4, firstName: 'Jane', lastName: 'Smith', age: 30 },
+    { id: 5, firstName: 'Jane', lastName: 'Smith', age: 30 },
+    { id: 6, firstName: 'Jane', lastName: 'Smith', age: 30 },
+    { id: 7, firstName: 'Jane', lastName: 'Smith', age: 30 },
+    { id: 8, firstName: 'Jane', lastName: 'Smith', age: 30 },
+    { id: 9, firstName: 'Jane', lastName: 'Smith', age: 30 },
+    { id: 10, firstName: 'Jane', lastName: 'Smith', age: 30 },
+]
 
 export default function SQLRequest() {
-    const example_table = [
-        { id: 1, firstName: 'John', lastName: 'Doe', age: 25 },
-        { id: 2, firstName: 'Jane', lastName: 'Smith', age: 30 },
-        { id: 3, firstName: 'Jane', lastName: 'Smith', age: 30 },
-        { id: 4, firstName: 'Jane', lastName: 'Smith', age: 30 },
-        { id: 5, firstName: 'Jane', lastName: 'Smith', age: 30 },
-        { id: 6, firstName: 'Jane', lastName: 'Smith', age: 30 },
-        { id: 7, firstName: 'Jane', lastName: 'Smith', age: 30 },
-        { id: 8, firstName: 'Jane', lastName: 'Smith', age: 30 },
-        { id: 9, firstName: 'Jane', lastName: 'Smith', age: 30 },
-        { id: 10, firstName: 'Jane', lastName: 'Smith', age: 30 },
-    ]
 
     const [sqlRequest, setSqlRequest] = useState("");
     const [table, setTable] = useState(null);
@@ -26,8 +26,17 @@ export default function SQLRequest() {
     };
 
     const sendSqlRequest = () => {
-        console.log("Sending request:", sqlRequest)
-        setTable(example_table);
+        fetch(`http://localhost:8000/sql-request?request=${sqlRequest}`, {
+            method: "GET",
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Received data:", data);
+                setTable(null);
+                setTable(data.response);
+                console.log(table)
+            })
+            .catch(error => console.error('Error fetching tables:', error));
     }
 
     return (

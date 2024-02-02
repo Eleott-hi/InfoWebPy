@@ -1,6 +1,6 @@
 
 from sqlalchemy.orm import Session
-from sqlalchemy import Table
+from sqlalchemy import Table, text
 from sqlalchemy import insert, delete, update
 
 
@@ -74,3 +74,24 @@ async def delete_table(
     delete_query = delete(cls)
     db.execute(delete_query)
     db.commit()
+    
+from datetime import date
+import json
+
+def default_serializer(obj):
+    if isinstance(obj, date):
+        return obj.isoformat()
+    raise TypeError("Type not serializable")
+
+async def process_row_sql_request(db: Session, request: str):
+    try:
+        result = db.execute(text(request))
+        rows = result.fetchall()
+        column_names = result.keys()
+
+        res = [dict(zip(column_names, row)) for row in rows]
+
+        return [dict(zip(column_names, row)) for row in rows]
+
+    except Exception as e:
+        return f"Error: {str(e)}"
