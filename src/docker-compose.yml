@@ -26,8 +26,8 @@ services:
     image: python:3.11
     container_name: fastapi
     # restart: always
-    # ports:
-      # - "8000:8000"
+    ports:
+      - "8000:8000"
     working_dir: /app
     volumes:
       - ./fastapi:/app
@@ -35,29 +35,29 @@ services:
     depends_on:
       - db
 
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    # restart: always
-    ports:
-      - 8000:8000
-      - 3001:3000
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      # - ./nginx/logs:/var/log/nginx
-    depends_on:
-      - fastapi
+  # nginx:
+  #   image: nginx:latest
+  #   container_name: nginx
+  #   # restart: always
+  #   ports:
+  #     - 8000:8000
+  #     - 3001:3000
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+  #     # - ./nginx/logs:/var/log/nginx
+  #   depends_on:
+  #     - fastapi
 
-  frontend:
-    image: node:18
-    container_name: frontend
-    # restart: always
-    # ports:
-      # - 3000:3000
-    working_dir: /app
-    volumes:
-      - ./frontend:/app
-    command: bash -c "npm install && npm run dev"
-    # depends_on:
-    #   - nginx
+  # frontend:
+  #   image: node:18
+  #   container_name: frontend
+  #   # restart: always
+  #   # ports:
+  #     # - 3000:3000
+  #   working_dir: /app
+  #   volumes:
+  #     - ./frontend:/app
+  #   command: bash -c "npm install && npm run dev"
+  #   # depends_on:
+  #   #   - nginx
     
