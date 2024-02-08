@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Table from "@/components/Table";
 import TableItemHandler from "@/components/TableItemHandler"
 
@@ -28,8 +28,8 @@ const example_functions = [
   "fnc_10",
 ];
 
-function WrapFunctions(functions, dialogFnc) {
-  let i = 1;
+function WrapFunctions(functions: string[], dialogFnc: any) {
+
   return (
     <ol>
       {
@@ -50,17 +50,36 @@ function WrapFunctions(functions, dialogFnc) {
   );
 }
 
+function ExecuteFunction(f_name: string, params: any, setTable: CallableFunction) {
+  fetch("http://localhost:8000/functions/" + f_name + "/execute", {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(params),
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log("Table", data);
+      setTable(data);
+    })
+    .catch(error => console.error('Error fetching tables:', error));
+}
+
 export default function Operations() {
-  const [sqlRequest, setSqlRequest] = useState("");
   const [table, setTable] = useState(null);
   const [isItemDialog, setIsItemDialog] = useState(false);
+  const [functions, setFunctions] = useState([]);
+  const [chosenFunction, setChosenFunctions] = useState("");
+  const [functionParams, setFunctionParams] = useState({});
   const [itemDialog, setItemDialog] = useState({
     header: "Enter function parameters:",
     content: { id: 1 },
     handleClose: (is_confirmed: boolean) => {
       if (is_confirmed) {
         console.log("CONFIRMED");
-        setTable(example_table)
+        ExecuteFunction(chosenFunction, itemDialog.content, setTable);
+        // setTable(example_table)
       } else {
         console.log("CANCELED");
       }
@@ -70,8 +89,36 @@ export default function Operations() {
 
   const OpenParametersDialog = (func: string) => {
     console.log(func)
-    setIsItemDialog(true);
+    console.log(chosenFunction)
+    setChosenFunctions(func);
+    console.log(chosenFunction)
+    console.log(chosenFunction)
+
+    fetch("http://localhost:8000/functions/" + func)
+      .then(response => response.json())
+      .then(data => {
+        if (Object.keys(data.input).length === 0) {
+          ExecuteFunction(func, {}, setTable);
+          return
+        }
+        setItemDialog({ ...itemDialog, content: data.input })
+        setIsItemDialog(true);
+      })
+      .catch(error => console.error('Error fetching function info:', error));
   }
+
+  useEffect(() => {
+    fetch("http://localhost:8000/functions", {
+      method: "GET"
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data.functions);
+        setFunctions(data.functions);
+      })
+      .catch(error => console.error('Error fetching tables:', error));
+  }, []);
+
 
   return (
     <div className="p-4 row">
@@ -79,7 +126,7 @@ export default function Operations() {
         <h1>Operations</h1>
       </div>
       <div className="col-lg-6 col-sm-12 d-flex flex-column mt-3">
-        {WrapFunctions(example_functions, OpenParametersDialog)}
+        {WrapFunctions(functions, OpenParametersDialog)}
       </div>
       {
         table && (

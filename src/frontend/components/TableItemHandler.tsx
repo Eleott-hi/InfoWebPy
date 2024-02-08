@@ -19,7 +19,7 @@ export default function TableItemHandler(
         }
     };
 
-    console.log("HERE", props.content)
+    console.log("Items", props.content)
 
     const states = {}
 
