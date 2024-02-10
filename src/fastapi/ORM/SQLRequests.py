@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import Table, text
 from sqlalchemy import insert, delete, update
+from datetime import date
+import json
 
 
 async def get_pk_field(cls: Table):
@@ -22,7 +24,8 @@ async def get_by_id(db: Session, cls: Table, id: int | str):
 
 async def update_by_id(db: Session, cls: Table, id: int | str, **kwargs):
     pk = await get_pk_field(cls)
-    update_query = update(cls).where(cls.c[pk] == id).values(**kwargs).returning(cls)
+    update_query = update(cls).where(
+        cls.c[pk] == id).values(**kwargs).returning(cls)
     result = db.execute(update_query)
     db.commit()
 
@@ -48,10 +51,6 @@ async def delete_table(db: Session, cls: Table):
     delete_query = delete(cls)
     db.execute(delete_query)
     db.commit()
-
-
-from datetime import date
-import json
 
 
 def default_serializer(obj):
@@ -119,7 +118,6 @@ async def __get_function_info(db: Session, f_name: str):
 async def get_function_info(db: Session, f_name: str):
 
     params = await __get_function_info(db, f_name)
-
     vars = list(zip(params[1], params[2], params[3]))
 
     res = {}

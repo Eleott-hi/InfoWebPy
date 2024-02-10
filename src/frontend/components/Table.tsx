@@ -6,8 +6,6 @@ export default function Table({ data }) {
     const is_valid = Array.isArray(data) && data.length > 0;
     const columns = is_valid ? Object.keys(data[0]) : [];
 
-    console.log("HERE IS THE DATA", data)
-
     let i = 0
 
     const renderTableData = (item: any) => {
@@ -45,7 +43,7 @@ export default function Table({ data }) {
             </div>
         ) : (
             <div className="container-fluid d-flex align-items-center justify-content-center"
-            style = {{minHeight: "200px"}}
+                style={{ minHeight: "200px" }}
             >
                 <div className="text-center">
                     <h1>No data</h1>

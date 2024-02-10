@@ -29,17 +29,14 @@ class CRUDRouter():
                 return await SQLRequests.create(db, self.db_model, **item.dict())
             except Exception as e:
                 raise HTTPException(status_code=404, detail=str(e))
-            
 
         @self.router.get("/", response_model=List[self.response_schema])
-        async def read_all(db: Session = Depends(self.db)):
+        async def get_all(db: Session = Depends(self.db)):
             return await SQLRequests.get_all(db, self.db_model)
-            
 
         @self.router.get("/{id}", response_model=self.response_schema)
-        async def read_one(id: int | str, db: Session = Depends(self.db)):
+        async def get_by_id(id: int | str, db: Session = Depends(self.db)):
             return await SQLRequests.get_by_id(db, self.db_model, id)
-        
 
         @self.router.put("/{id}", response_model=self.response_schema)
         async def update_item(id: int | str, updated_item: self.create_schema, db: Session = Depends(self.db)):
@@ -47,7 +44,6 @@ class CRUDRouter():
                 return await SQLRequests.update_by_id(db, self.db_model, id, **updated_item.dict())
             except Exception as e:
                 raise HTTPException(status_code=404, detail=str(e))
-            
 
         @self.router.delete("/{id}", response_model=dict)
         async def delete_item(id: int | str, db: Session = Depends(self.db)):
@@ -56,7 +52,7 @@ class CRUDRouter():
                 return {"message": f"{self.db_model} with id={id} deleted successfully"}
             except Exception as e:
                 raise HTTPException(status_code=404, detail=str(e))
-        
+
         @self.router.delete("/", response_model=dict)
         async def delete_table(db: Session = Depends(self.db)):
             try:
@@ -65,18 +61,14 @@ class CRUDRouter():
             except Exception as e:
                 raise HTTPException(status_code=404, detail=str(e))
 
-
-        @self.router.post("/upload")
-        async def import_csv_to_db(file: UploadFile = File(...), db: Session = Depends(self.db)):
+        @self.router.post("/import")
+        async def import_table(table: list[self.create_schema],  db: Session = Depends(self.db)):
             try:
-                content = await file.read()
-                decoded_content = content.decode('utf-8')
-                csv_reader = csv.DictReader(decoded_content.splitlines())
+                await SQLRequests.delete_table(db, self.db_model)
+                for row in table:
+                    await SQLRequests.create(db, self.db_model, **row.dict())
 
-                for row in csv_reader:
-                    await SQLRequests.create(db, self.db_model, **row)
-
-                return {"message": f"{file.filename} imported successfully"}
+                return {"message": f"{self.db_model} was imported successfully"}
 
             except Exception as e:
                 return HTTPException(status_code=500, detail=str(e))

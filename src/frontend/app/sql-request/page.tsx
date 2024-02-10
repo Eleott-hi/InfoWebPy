@@ -1,6 +1,8 @@
 "use client";
 import { useState } from 'react';
 import Table from "@/components/Table";
+import { ExportCSV } from "@/components/ImportExport";
+import { apiSendSqlRequest } from "@/components/ApiHandler"
 
 const example_table = [
     { id: 1, firstName: 'John', lastName: 'Doe', age: 25 },
@@ -20,24 +22,8 @@ export default function SQLRequest() {
     const [sqlRequest, setSqlRequest] = useState("");
     const [table, setTable] = useState(null);
 
-    const handleTextareaChange = (event) => {
-        console.log(event.target.value)
-        setSqlRequest(event.target.value);
-    };
-
-    const sendSqlRequest = () => {
-        fetch(`http://localhost:8000/sql-request?request=${sqlRequest}`, {
-            method: "GET",
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log("Received data:", data);
-                setTable(null);
-                setTable(data.response);
-                console.log(table)
-            })
-            .catch(error => console.error('Error fetching tables:', error));
-    }
+    const sendSqlRequest = () => { apiSendSqlRequest(sqlRequest, (data) => setTable(data.response)) };
+    const handleTextareaChange = (event) => { setSqlRequest(event.target.value); };
 
     return (
         <div className="p-4 row">
@@ -63,7 +49,6 @@ export default function SQLRequest() {
                     Execute
                 </button>
             </div>
-
             {
                 table && (
                     <div className="col-lg-6 col-sm-12 d-flex flex-column mt-3">
@@ -71,13 +56,13 @@ export default function SQLRequest() {
                             <Table data={table}></Table>
                         </div>
                         <button type="button"
-                            className="btn s21-btn mt-2 ms-auto">
+                            className="btn s21-btn mt-2 ms-auto"
+                            onClick={() => ExportCSV(table)}>
                             Export
                         </button>
                     </div>
                 )
             }
-
         </div>
     );
 }

@@ -1,105 +1,28 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import EditableTable from '@/components/EditableTable';
 import ConfirmDialog from '@/components/ConfirmDialog';
 import TableItemHandler from '@/components/TableItemHandler';
+import { apiUpdateTable, apiDeleteTable, apiEditItem, apiCreateItem, apiDeleteItem, apiImportTable } from '@/components/ApiHandler';
+import { ExportCSV, ImportCSV } from '@/components/ImportExport';
 
 
 export default function TablePage({ params }) {
-    const [table, setTable] = useState([
-        // { id: 1, firstName: 'John', lastName: 'Doe', age: 25, some: "thing" },
-        // { id: 2, firstName: 'Jane', lastName: 'Smith', age: 30, some: "thing" },
-        // { id: 3, firstName: 'Jane', lastName: 'Smith', age: 30, some: "thing" },
-        // { id: 4, firstName: 'Jane', lastName: 'Smith', age: 30, some: "thing" },
-        // { id: 5, firstName: 'Jane', lastName: 'Smith', age: 30, some: "thing" },
-        // { id: 6, firstName: 'Jane', lastName: 'Smith', age: 30, some: "thing" },
-        // { id: 7, firstName: 'Jane', lastName: 'Smith', age: 30, some: "thing" },
-        // { id: 8, firstName: 'Jane', lastName: 'Smith', age: 30, some: "thing" },
-        // { id: 9, firstName: 'Jane', lastName: 'Smith', age: 30, some: "thing" },
-        // { id: 10, firstName: 'Jane', lastName: 'Smith', age: 30, some: "thing" },
-    ]);
-
-
-
-    const updateTable = () => {
-        console.log("http://localhost:8000/tables/" + params.table_name)
-        fetch("http://localhost:8000/tables/" + params.table_name, {
-            method: "GET"
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log("here", data);
-                setTable(data);
-            })
-            .catch(error => console.error('Error fetching tables:', error));
-    }
-
-    const editItem = (id: string, item: any) => {
-        console.log("Confirm editting item with id: " + id, item);
-        fetch("http://localhost:8000/tables/" + params.table_name + "/" + id, {
-            method: "PUT",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(item)
-        })
-            .then(_ => {
-                console.log("Confirm editting item with id: " + id, item);
-                updateTable();
-            })
-            .catch(error => console.error('Error fetching tables:', error));
-    }
-
-    const deleteItem = (id: string) => {
-        console.log("Confirm deletion of item with id:", id);
-        fetch("http://localhost:8000/tables/" + params.table_name + "/" + id, {
-            method: "DELETE",
-        })
-            .then((data) => {
-                console.log(data);
-                updateTable();
-            })
-            .catch(error => console.error('Error fetching tables:', error));
-    }
-
-    const createItem = (item: any) => {
-        console.log("Creating item", item);
-        fetch("http://localhost:8000/tables/" + params.table_name, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(item)
-        })
-            .then(_ => {
-                console.log("Item created:", item);
-                updateTable();
-            })
-            .catch(error => console.error('Error fetching tables:', error));
-    }
-
-
-    const deleteTable = () => {
-        console.log("Confirmed table deletion");
-        fetch("http://localhost:8000/tables/" + params.table_name,
-            {
-                method: "DELETE",
-            }
-        )
-            .then((data) => {
-                console.log(data);
-                updateTable();
-            })
-            .catch(error => console.error('Error fetching tables:', error));
-    }
-
-    useEffect(() => updateTable, []);
-
+    const [table, setTable] = useState([]);
     const [isConfirmDialog, setIsConfirmDialog] = useState(false);
     const [confirmDialog, setConfirmDialog] = useState({});
     const [isItemDialog, setIsItemDialog] = useState(false);
     const [itemDialog, setItemDialog] = useState({});
+    const fileInputRef = useRef(null);
+
+    const updateTable = () => apiUpdateTable(params.table_name, setTable);
+    const deleteTable = () => apiDeleteTable(params.table_name, updateTable);
+    const editItem = (id: string, item: any) => apiEditItem(params.table_name, id, item, updateTable);
+    const createItem = (item: any) => apiCreateItem(params.table_name, item, updateTable);
+    const deleteItem = (id: string) => apiDeleteItem(params.table_name, id, updateTable);
+
+    useEffect(updateTable, []);
 
     const openDeleteItemConfirmDialog = (id: string) => {
         setConfirmDialog({
@@ -215,17 +138,14 @@ export default function TablePage({ params }) {
                 </a>
                 <h1 className="ms-3">Table: {params.table_name}</h1>
             </div>
-
             <div className="row">
                 <div className="col-md-9 card s21-card mb-5"
-                    style={{ minWidth: 'fit-content' }}
-                >
-                    <EditableTable data={table}
+                    style={{ minWidth: 'fit-content' }}>
+                    <EditableTable
+                        data={table}
                         openDeleteItemConfirmDialog={openDeleteItemConfirmDialog}
-                        openEditItemDialog={openEditItemDialog}
-                    />
+                        openEditItemDialog={openEditItemDialog} />
                 </div>
-
                 <div className="col-md-3">
                     <div className="card s21-card align-items-center p-4"
                     // style={{ maxWidth: "300px" }}
@@ -241,12 +161,25 @@ export default function TablePage({ params }) {
                             onClick={openCreateItemDialog}>
                             Create item
                         </button>
-                        <button type="button" className="btn s21-btn mt-2">Import table</button>
-                        <button type="button" className="btn s21-btn mt-2">Export table</button>
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            style={{ display: 'none' }}
+                            onChange={ImportCSV}
+                        />
+                        <button type="button"
+                            className="btn s21-btn mt-2"
+                            onClick={() => fileInputRef?.current?.click()}>
+                            Import table
+                        </button>
+                        <button type="button"
+                            className="btn s21-btn mt-2"
+                            onClick={() => ExportCSV(table)}>
+                            Export table
+                        </button>
                     </div>
                 </div>
             </div>
-
             {isItemDialog && (<TableItemHandler props={itemDialog} />)}
             {isConfirmDialog && (<ConfirmDialog props={confirmDialog} />)}
         </div>
