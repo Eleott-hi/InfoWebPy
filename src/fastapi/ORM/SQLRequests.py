@@ -16,6 +16,10 @@ async def get_all(db: Session, cls: Table):
     return db.query(cls).all()
 
 
+async def get_columns(db: Session, cls: Table):
+    return [column.name for column in cls.columns]
+
+
 async def get_by_id(db: Session, cls: Table, id: int | str):
 
     pk = await get_pk_field(cls)
@@ -24,8 +28,7 @@ async def get_by_id(db: Session, cls: Table, id: int | str):
 
 async def update_by_id(db: Session, cls: Table, id: int | str, **kwargs):
     pk = await get_pk_field(cls)
-    update_query = update(cls).where(
-        cls.c[pk] == id).values(**kwargs).returning(cls)
+    update_query = update(cls).where(cls.c[pk] == id).values(**kwargs).returning(cls)
     result = db.execute(update_query)
     db.commit()
 
@@ -60,17 +63,13 @@ def default_serializer(obj):
 
 
 async def process_row_sql_request(db: Session, request: str):
-    try:
-        result = db.execute(text(request))
-        rows = result.fetchall()
-        column_names = result.keys()
+    result = db.execute(text(request))
+    rows = result.fetchall()
+    column_names = result.keys()
 
-        res = [dict(zip(column_names, row)) for row in rows]
+    res = [dict(zip(column_names, row)) for row in rows]
 
-        return [dict(zip(column_names, row)) for row in rows]
-
-    except Exception as e:
-        return f"Error: {str(e)}"
+    return [dict(zip(column_names, row)) for row in rows]
 
 
 async def __get_type_name(db: Session, type_ids: tuple[str]):
@@ -92,12 +91,11 @@ async def __get_type_name(db: Session, type_ids: tuple[str]):
 
     return [cached_get_type_name(type_id) for type_id in type_ids]
 
-
 async def __get_function_info(db: Session, f_name: str):
 
     query = text(
         """
-        SELECT 
+        SELECT
         
         proname, 
         proargmodes, 

@@ -1,6 +1,8 @@
 import Papa from 'papaparse';
+import { ChangeEvent } from 'react';
 
 export function ExportCSV(table: any[]) {
+    console.log(table)
     if (table.length === 0) {
         return;
     }
@@ -19,10 +21,14 @@ export function ExportCSV(table: any[]) {
 
 
 
-export function ImportCSV(e, on_done: (data: any) => void) {
-    const file = e.target.files[0];
-    Papa.parse(file, {
-        complete: (result) => { console.log(result.data); on_done(result.data); },
-        header: true
-    });
+export function ImportCSV(e: ChangeEvent<HTMLInputElement>, on_done: (data: any) => void) {
+    const file = e?.target?.files ? e?.target?.files[0] : null;
+    if (file) {
+        Papa.parse(file, {
+            complete: (result) => { console.log(result.data); on_done(result.data); },
+            header: true
+        });
+    } else {
+        console.error('No file selected');
+    }
 };

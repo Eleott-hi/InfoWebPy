@@ -1,10 +1,10 @@
 import FunctionList from './fucntions';
-import { apiGetFunctions } from '@/components/ApiHandler';
+import { apiGetFunctionsAsync } from '@/components/ApiHandler';
 
 export default async function Operations() {
-  const response = await apiGetFunctions();
+  const response = await apiGetFunctionsAsync();
 
   return (
-    <FunctionList functions={response.functions} />
+    <FunctionList functions={response.functions} readable={response.readable_names} />
   );
 }

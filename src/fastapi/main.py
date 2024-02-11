@@ -7,7 +7,8 @@ from ORM.Database import get_db, engine
 from ORM.Functions import get_function_list
 from ORM.SQLRequests import process_row_sql_request
 
-from fastapi import Depends
+from fastapi import Depends, HTTPException
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 
@@ -40,14 +41,39 @@ funcs = get_function_list(engine)
 LinkModelRouters(app, models)
 LinkFunctionRouters(app, funcs)
 
-origins = [
-    "http://localhost",
-    "http://localhost:3000",  # Add your frontend origin(s)
+# HARDCODED
+readable_function_names = [
+    "human readable transferred points",
+    "human readable xp earned",
+    "peers not leaving during the day",
+    "percentage of successful checks",
+    "points change",
+    "points change using hr-source",
+    "most checked task daily",
+    "last p2p duration",
+    "who and when completed the block",
+    "recommended for check",
+    "two blocks stats",
+    "most friendly peers",
+    "peers passed check on birthday",
+    "peers total xp",
+    "peers did 1 and 2 tasks but not 3",
+    "number of previous tasks",
+    "lucky days",
+    "peer completed max tasks",
+    "peer with max xp",
+    "peer max time in campus today",
+    "peers came early N times",
+    "peers left M times last N days",
+    "peer came last today",
+    "peer left for N minutes yesterday",
+    "early visits for each month",
 ]
+
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -56,27 +82,30 @@ app.add_middleware(
 
 @app.get("/tables")
 async def tables():
-    return {"tables": [str(model["db_model"]) for model in models]}
+    try:
+        return {"tables": [str(model["db_model"]) for model in models]}
+    except Exception as e:
+        return HTTPException(status_code=404, detail=str(e))
 
 
 @app.get("/functions")
 async def get_functions():
-    return {"functions": [str(f_name) for f_name in funcs]}
-
-
-# @app.get("/sql-request")
-# async def sql_request(request: str):
-#     print(request)
-#     return {
-#         "request": request
-#     }
+    try:
+        return {
+            "functions": [str(f_name) for f_name in funcs],
+            "readable_names": readable_function_names,
+        }
+    except Exception as e:
+        return HTTPException(status_code=404, detail=str(e))
 
 
 @app.get("/sql-request")
 async def sql_request(request: str, db: Session = Depends(get_db)):
-    res = await process_row_sql_request(db, request)
-    print(res)
-    return {"response": res}
+    try:
+        res = await process_row_sql_request(db, request)
+        return res
+    except Exception as e:
+        return HTTPException(status_code=404, detail=str(e))
 
 
 if __name__ == "__main__":

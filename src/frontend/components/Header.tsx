@@ -2,6 +2,7 @@
 
 import Script from "next/script";
 import { usePathname } from 'next/navigation';
+import Image from "next/image";
 
 const navLinks = [
     { href: "/data", name: "Data" },
@@ -24,9 +25,8 @@ export default function Header() {
                     minHeight: "150px"
                 }}>
                 <div className="container-fluid">
-
                     <a className="" href="/">
-                        <img className='' src="/main.png" alt="Logo" height={150} />
+                        <Image className='' src="/main.png" alt="Logo" width={150} height={150} />
                     </a>
 
                     <div className='text-center'

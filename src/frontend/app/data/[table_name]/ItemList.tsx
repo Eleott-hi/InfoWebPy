@@ -6,19 +6,36 @@ import ConfirmDialog from '@/components/ConfirmDialog';
 import TableItemHandler from '@/components/TableItemHandler';
 import { apiGetTable, apiDeleteTable, apiEditItem, apiCreateItem, apiDeleteItem, apiImportTable } from '@/components/ApiHandler';
 import { ExportCSV, ImportCSV } from '@/components/ImportExport';
+import ErrorDialog from '@/components/ErrorDialog';
 
-export default function ItemList({ t_name, items }: { t_name: string, items: any[] }) {
+export default function ItemList({ t_name, columns, items }: { t_name: string, columns: any[string], items: any[] }) {
     const [table, setTable] = useState(items);
     const [isConfirmDialog, setIsConfirmDialog] = useState(false);
-    const [confirmDialog, setConfirmDialog] = useState({});
     const [isItemDialog, setIsItemDialog] = useState(false);
-    const [itemDialog, setItemDialog] = useState({});
-    const fileInputRef = useRef(null);
+    const [confirmDialog, setConfirmDialog] = useState({
+        header: "",
+        content: "",
+        handleClose: (is_confirmed: boolean) => { },
+    });
+    const [itemDialog, setItemDialog] = useState({
+        header: "",
+        content: {},
+        handleClose: (is_confirmed: boolean) => { },
+    });
+    const [isErrorDialog, setIsErrorDialog] = useState(false);
+    const [errorProps, setErrorProps] = useState({
+        header: "Invalid item parameters",
+        content: "Please check your input and try again",
+        handleClose: () => { setIsErrorDialog(false) }
+    });
+
+
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const updateTable = () => apiGetTable(t_name, setTable);
     const deleteTable = () => apiDeleteTable(t_name, updateTable);
-    const editItem = (id: string, item: any) => apiEditItem(t_name, id, item, updateTable);
-    const createItem = (item: any) => apiCreateItem(t_name, item, updateTable);
+    const editItem = (id: string, item: any) => apiEditItem(t_name, id, item, updateTable, () => setIsErrorDialog(true));
+    const createItem = (item: any) => apiCreateItem(t_name, item, updateTable, () => setIsErrorDialog(true));
     const deleteItem = (id: string) => apiDeleteItem(t_name, id, updateTable);
     const uploadTable = (data: any[]) => apiImportTable(t_name, data, updateTable);
 
@@ -93,7 +110,11 @@ export default function ItemList({ t_name, items }: { t_name: string, items: any
     };
 
     const openCreateItemDialog = () => {
-        const item = table[0]
+        const item: any = {};
+
+        columns.forEach((column: any) => {
+            item[column] = "";
+        });
 
         setItemDialog({
             header: "Create item",
@@ -180,6 +201,7 @@ export default function ItemList({ t_name, items }: { t_name: string, items: any
             </div>
             {isItemDialog && (<TableItemHandler props={itemDialog} />)}
             {isConfirmDialog && (<ConfirmDialog props={confirmDialog} />)}
+            {isErrorDialog && (<ErrorDialog props={errorProps} />)}
         </div>
     );
 }

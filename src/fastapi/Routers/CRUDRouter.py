@@ -7,7 +7,7 @@ import ORM.SQLRequests as SQLRequests
 import csv
 
 
-class CRUDRouter():
+class CRUDRouter:
     def __init__(
         self,
         response_schema,
@@ -32,16 +32,35 @@ class CRUDRouter():
 
         @self.router.get("/", response_model=List[self.response_schema])
         async def get_all(db: Session = Depends(self.db)):
-            return await SQLRequests.get_all(db, self.db_model)
+            try:
+                return await SQLRequests.get_all(db, self.db_model)
+            except Exception as e:
+                raise HTTPException(status_code=404, detail=str(e))
+
+        @self.router.get("/columns", response_model=List[str])
+        async def get_columns(db: Session = Depends(self.db)):
+            try:
+                return await SQLRequests.get_columns(db, self.db_model)
+            except Exception as e:
+                raise HTTPException(status_code=404, detail=str(e))
 
         @self.router.get("/{id}", response_model=self.response_schema)
         async def get_by_id(id: int | str, db: Session = Depends(self.db)):
-            return await SQLRequests.get_by_id(db, self.db_model, id)
+            try:
+                return await SQLRequests.get_by_id(db, self.db_model, id)
+            except Exception as e:
+                raise HTTPException(status_code=404, detail=str(e))
 
         @self.router.put("/{id}", response_model=self.response_schema)
-        async def update_item(id: int | str, updated_item: self.create_schema, db: Session = Depends(self.db)):
+        async def update_item(
+            id: int | str,
+            updated_item: self.create_schema,
+            db: Session = Depends(self.db),
+        ):
             try:
-                return await SQLRequests.update_by_id(db, self.db_model, id, **updated_item.dict())
+                return await SQLRequests.update_by_id(
+                    db, self.db_model, id, **updated_item.dict()
+                )
             except Exception as e:
                 raise HTTPException(status_code=404, detail=str(e))
 
@@ -62,7 +81,9 @@ class CRUDRouter():
                 raise HTTPException(status_code=404, detail=str(e))
 
         @self.router.post("/import")
-        async def import_table(table: list[self.create_schema],  db: Session = Depends(self.db)):
+        async def import_table(
+            table: list[self.create_schema], db: Session = Depends(self.db)
+        ):
             try:
                 await SQLRequests.delete_table(db, self.db_model)
                 for row in table:

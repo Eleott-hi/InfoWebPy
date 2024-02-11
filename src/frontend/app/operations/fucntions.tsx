@@ -4,13 +4,24 @@ import Table from "@/components/Table";
 import TableItemHandler from "@/components/TableItemHandler"
 import { ExportCSV } from '@/components/ImportExport';
 import { apiGetFunctionInfo, apiExecuteFunction } from '@/components/ApiHandler';
+import ErrorDialog from '@/components/ErrorDialog';
 
-export default function FunctionList({ functions }: { functions: string[] }) {
-    const [table, setTable] = useState(null);
+export default function FunctionList({ functions, readable }: { functions: string[], readable: string[] }) {
+    const [table, setTable] = useState<any[] | null>(null);
     const [isItemDialog, setIsItemDialog] = useState(false);
-    const [itemDialog, setItemDialog] = useState({});
+    const [itemDialog, setItemDialog] = useState({
+        header: "",
+        content: {},
+        handleClose: (is_confirmed: boolean) => { }
+    });
+    const [isErrorDialog, setIsErrorDialog] = useState(false);
+    const [errorProps, setErrorProps] = useState({
+        header: "Invalid function parameters",
+        content: "Please check your input and try again",
+        handleClose: () => { setIsErrorDialog(false) }
+    });
 
-    const ExecuteFunction = (f_name: string, params: any) => { setTable([]); apiExecuteFunction(f_name, params, setTable); }
+    const ExecuteFunction = (f_name: string, params: any, on_done: (data: any[]) => void) => { setTable([]); apiExecuteFunction(f_name, params, on_done, () => { setTable(null); setIsErrorDialog(true); }); }
 
     const OpenParametersDialog = (f_name: string, data: any) => {
         setItemDialog({
@@ -19,11 +30,11 @@ export default function FunctionList({ functions }: { functions: string[] }) {
             handleClose: (is_confirmed: boolean, params: any = null) => {
                 if (is_confirmed) {
                     console.log("CONFIRMED", params);
-                    ExecuteFunction(f_name, params);
+                    ExecuteFunction(f_name, params, (data: any[]) => { setTable(data); setIsItemDialog(false) });
                 } else {
                     console.log("CANCELED");
+                    setIsItemDialog(false)
                 }
-                setIsItemDialog(false)
             }
         })
         setIsItemDialog(true);
@@ -31,7 +42,7 @@ export default function FunctionList({ functions }: { functions: string[] }) {
 
     const ParametersDialogLogic = (f_name: string, data: any) => {
         if (Object.keys(data).length === 0) {
-            ExecuteFunction(f_name, {});
+            ExecuteFunction(f_name, {}, setTable);
         } else {
             OpenParametersDialog(f_name, data);
         }
@@ -47,10 +58,10 @@ export default function FunctionList({ functions }: { functions: string[] }) {
             <div className="col-lg-6 col-sm-12 d-flex flex-column mt-3">
                 <ol>
                     {
-                        functions.map((f_name) => (
+                        functions.map((f_name, index) => (
                             <li className='mt-1' key={f_name}>
                                 <button type="button" className='btn s21-btn' onClick={() => FunctionHandler(f_name)}>
-                                    {f_name}
+                                    {readable[index]}
                                 </button>
                             </li>
                         ))
@@ -70,6 +81,7 @@ export default function FunctionList({ functions }: { functions: string[] }) {
                 )
             }
             {isItemDialog && (<TableItemHandler props={itemDialog} />)}
+            {isErrorDialog && (<ErrorDialog props={errorProps} />)}
         </div>
     );
 }

@@ -20,8 +20,14 @@ class FunctionRouter:
 
         @self.router.get("/", response_model=dict)
         async def get_function_info(db: Session = Depends(self.db)):
-            return await SQLRequests.get_function_info(db, self.f_name)
+            try:
+                return await SQLRequests.get_function_info(db, self.f_name)
+            except Exception as e:
+                raise HTTPException(status_code=404, detail=str(e))
 
         @self.router.post("/execute")
         async def execute_function(params: dict, db: Session = Depends(self.db)):
-            return await SQLRequests.execute_function(db, self.f_name, **params)
+            try:
+                return  await SQLRequests.execute_function(db, self.f_name, **params)
+            except Exception as e:
+                raise HTTPException(status_code=404, detail=str(e))

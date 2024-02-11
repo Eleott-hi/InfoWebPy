@@ -2,7 +2,7 @@
 import React from 'react';
 import { useState } from 'react';
 
-export default function Table({ data }) {
+export default function Table({ data }: { data: any }) {
     const is_valid = Array.isArray(data) && data.length > 0;
     const columns = is_valid ? Object.keys(data[0]) : [];
 
@@ -12,9 +12,13 @@ export default function Table({ data }) {
         console.log(i)
         return (
             <tr key={i++}>
-                {columns.map((column) => (
-                    <td key={column} className='text-center'>{item[column]}</td>
-                ))}
+                {
+                    columns.map((column) => (
+                        <td key={column} className='text-center'>
+                            {item[column] !== null ? item[column] : "-"}
+                        </td>
+                    ))
+                }
             </tr>
         );
     }

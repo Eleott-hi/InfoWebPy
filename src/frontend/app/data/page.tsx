@@ -1,10 +1,9 @@
 // import React, { useState, useEffect } from 'react';
-import { apiGetTables } from "@/components/ApiHandler";
+import { apiGetTablesAsync } from "@/components/ApiHandler";
 
 export default async function Data() {
 
-    const response = await apiGetTables(() => { })
-    const tables = response.tables
+    const response = await apiGetTablesAsync(() => { })
 
     return (
         <div className="container p-4">
@@ -15,7 +14,7 @@ export default async function Data() {
             <div className="container mt-5">
                 <div className="row row-cols-1 row-cols-md-3 g-4">
                     {
-                        tables.map((table: string) => (
+                        response.tables.map((table: string) => (
                             <div className="col" key={table}>
                                 <div className="card s21-card">
                                     <div className="card-body text-center">

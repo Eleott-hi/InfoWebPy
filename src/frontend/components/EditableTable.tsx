@@ -5,8 +5,13 @@ import { useState } from 'react';
 export default function EditableTable({ data,
     openDeleteItemConfirmDialog,
     openEditItemDialog,
-    openEditItemConfirmDialog,
-}) {
+}:
+    {
+        data: any[],
+        openDeleteItemConfirmDialog: (id: string) => void,
+        openEditItemDialog: (item: any) => void,
+    }
+) {
     const columns = data.length > 0 ? Object.keys(data[0]) : [];
 
     return data.length > 0 ?
