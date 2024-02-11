@@ -1,12 +1,10 @@
-"use client";
-import React, { useState, useEffect } from 'react';
+// import React, { useState, useEffect } from 'react';
 import { apiGetTables } from "@/components/ApiHandler";
 
-export default function Data() {
+export default async function Data() {
 
-    const [tables, setTables] = useState([]);
-    const getTables = () => apiGetTables((data) => setTables(data.tables));
-    useEffect(getTables, []);
+    const response = await apiGetTables(() => { })
+    const tables = response.tables
 
     return (
         <div className="container p-4">

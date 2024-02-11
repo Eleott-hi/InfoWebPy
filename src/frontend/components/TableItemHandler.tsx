@@ -56,7 +56,7 @@ export default function TableItemHandler(
                     <div className="card-body text-center">
                         {
                             Object.keys(props.content).map((column) => (
-                                <div className='col mt-3'>
+                                <div className='col mt-3' key={column}>
                                     <div className="row">
                                         <label htmlFor={column} className='col'>{column}</label>
                                         <input id={column}

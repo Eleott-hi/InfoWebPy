@@ -5,15 +5,27 @@ const base_sql_request_api_url = "http://localhost:8000/sql-request"
 const base_functions_api_url = "http://localhost:8000/functions";
 
 
-export function apiGetTables(on_done: (data: any) => void) {
-    fetch(base_table_api_url, { method: "GET" })
-        .then(response => response.json())
-        .then(data => { console.log(data); on_done(data); })
-        .catch(error => console.error('Error fetching tables:', error));
+export async function apiGetTables(on_done: (data: any) => void) {
+    const data = await fetch(base_table_api_url,
+        {
+            method: "GET",
+            cache: "no-cache",
+        }
+    )
+    return data.json();
 }
 
+export async function apiGetTableAsync(t_name: string) {
+    const response = await fetch(base_table_api_url + '/' + t_name,
+        {
+            method: "GET",
+            cache: "no-cache",
+        }
+    )
+    return response.json();
+}
 
-export function apiUpdateTable(t_name: string, on_done: (data: any) => void) {
+export function apiGetTable(t_name: string, on_done: (data: any) => void) {
     fetch(base_table_api_url + '/' + t_name, { method: "GET" })
         .then(response => response.json())
         .then(data => { console.log(data); on_done(data) })
@@ -59,16 +71,24 @@ export function apiDeleteItem(t_name: string, id: string, on_done: (data: any) =
         .catch(error => console.error('Error deleting item:', error));
 }
 
-export function apiImportTable() {
-    console.log("Confirmed table import");
+export function apiImportTable(t_name: string, table: any[], on_done: (data: any) => void) {
+    console.log(table);
+
+    fetch(base_table_api_url + '/' + t_name + "/import",
+        {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(table)
+        })
+        .then(data => { console.log(data); on_done(data); })
+        .catch(error => console.error('Error importing table:', error));
+
 }
 
 
-export function apiGetFunctions(on_done: (data: any) => void) {
-    fetch(base_functions_api_url, { method: "GET" })
-        .then(response => response.json())
-        .then(data => { console.log(data); on_done(data); })
-        .catch(error => console.error('Error fetching functions:', error));
+export async function apiGetFunctions() {
+    const response = await fetch(base_functions_api_url, { method: "GET" })
+    return response.json();
 }
 
 
@@ -94,7 +114,5 @@ export function apiExecuteFunction(f_name: string, params: any, on_done: (data: 
 export function apiSendSqlRequest(sqlRequest: string, on_done: (data: any) => void) {
     fetch(base_sql_request_api_url + `?request=${sqlRequest}`, { method: "GET", })
         .then(response => response.json())
-        .then(_ => { throw Error("Test error"); })
         .then(data => { console.log(data); on_done(data); })
-    // .catch(error => console.error('Error fetching tables:', error));
 }

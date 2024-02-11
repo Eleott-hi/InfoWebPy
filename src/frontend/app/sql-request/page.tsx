@@ -4,18 +4,6 @@ import Table from "@/components/Table";
 import { ExportCSV } from "@/components/ImportExport";
 import { apiSendSqlRequest } from "@/components/ApiHandler"
 
-const example_table = [
-    { id: 1, firstName: 'John', lastName: 'Doe', age: 25 },
-    { id: 2, firstName: 'Jane', lastName: 'Smith', age: 30 },
-    { id: 3, firstName: 'Jane', lastName: 'Smith', age: 30 },
-    { id: 4, firstName: 'Jane', lastName: 'Smith', age: 30 },
-    { id: 5, firstName: 'Jane', lastName: 'Smith', age: 30 },
-    { id: 6, firstName: 'Jane', lastName: 'Smith', age: 30 },
-    { id: 7, firstName: 'Jane', lastName: 'Smith', age: 30 },
-    { id: 8, firstName: 'Jane', lastName: 'Smith', age: 30 },
-    { id: 9, firstName: 'Jane', lastName: 'Smith', age: 30 },
-    { id: 10, firstName: 'Jane', lastName: 'Smith', age: 30 },
-]
 
 export default function SQLRequest() {
 

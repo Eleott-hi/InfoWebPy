@@ -1,5 +1,5 @@
 
-export default function Home() {
+export default async function Home() {
   return (
     <div className="container">
       <h1 className="mt-5">Project - Info21 v2.0 Web</h1>
