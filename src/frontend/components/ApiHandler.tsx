@@ -129,6 +129,7 @@ export function apiExecuteFunction(f_name: string, params: any, on_done: (data: 
 
 export function apiSendSqlRequest(sqlRequest: string, on_done: (data: any) => void, on_error: (data: any) => void) {
     fetch(csr_host + base_sql_request_api_url + `?request=${sqlRequest}`, { method: "GET", })
+        .then(response => { console.log(response); return response })
         .then(response => { if (response.status !== 200) throw Error("Could not execute function"); return response.json() })
         .then(on_done)
         .catch(error => { console.error('Error fetching sql request:', error); on_error(error) });

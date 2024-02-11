@@ -1,0 +1,32 @@
+{
+    "version": 1,
+    "disable_existing_loggers": false,
+    "formatters": {
+      "standard": {
+        "format": "%(levelname)s - %(asctime)s - %(module)s - %(funcName)s - %(message)s"
+      }
+    },
+    "handlers": {
+      "console": {
+        "class": "logging.StreamHandler",
+        "formatter": "standard",
+        "level": "INFO"
+      },
+      "file": {
+        "class": "logging.handlers.TimedRotatingFileHandler",
+        "formatter": "standard",
+        "level": "INFO",
+        "filename": "logs/logs_{asctime}.log",
+        "when": "midnight",
+        "backupCount": 0
+      }
+    },
+    "loggers": {
+      "": {
+        "handlers": ["console", "file"],
+        "level": "INFO",
+        "propagate": true
+      }
+    }
+  }
+  

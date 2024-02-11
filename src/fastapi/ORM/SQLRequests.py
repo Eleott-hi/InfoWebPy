@@ -69,7 +69,7 @@ async def process_row_sql_request(db: Session, request: str):
 
     res = [dict(zip(column_names, row)) for row in rows]
 
-    return [dict(zip(column_names, row)) for row in rows]
+    return res
 
 
 async def __get_type_name(db: Session, type_ids: tuple[str]):

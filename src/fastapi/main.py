@@ -1,3 +1,5 @@
+from logging_config import get_logger, init_logging
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from Routers.CRUDRouter import CRUDRouter
@@ -7,9 +9,13 @@ from ORM.Database import get_db, engine
 from ORM.Functions import get_function_list
 from ORM.SQLRequests import process_row_sql_request
 
+
 from fastapi import Depends, HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
+
+init_logging()
+logger = get_logger(__name__)
 
 
 def LinkModelRouters(app, models):
@@ -83,32 +89,45 @@ app.add_middleware(
 @app.get("/tables")
 async def tables():
     try:
-        return {"tables": [str(model["db_model"]) for model in models]}
+        res = {"tables": [str(model["db_model"]) for model in models]}
+        logger.info(res)
+
+        return res
+
     except Exception as e:
-        return HTTPException(status_code=404, detail=str(e))
+        logger.error(e)
+        raise HTTPException(status_code=404, detail=str(e))
 
 
 @app.get("/functions")
 async def get_functions():
     try:
-        return {
+        res = {
             "functions": [str(f_name) for f_name in funcs],
             "readable_names": readable_function_names,
         }
+
+        logger.info(res)
+        return res
+
     except Exception as e:
-        return HTTPException(status_code=404, detail=str(e))
+        logger.error(e)
+        raise HTTPException(status_code=404, detail=str(e))
 
 
 @app.get("/sql-request")
 async def sql_request(request: str, db: Session = Depends(get_db)):
     try:
         res = await process_row_sql_request(db, request)
+        logger.info(res)
         return res
+
     except Exception as e:
-        return HTTPException(status_code=404, detail=str(e))
+        logger.error(e)
+        raise HTTPException(status_code=404, detail=str(e))
 
 
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("main:app", host="fastapi", port=8000, reload=True)
+    uvicorn.run("main:app", host="fastapi", port=8000, reload=False)
