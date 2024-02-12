@@ -65,7 +65,7 @@ readable_function_names = [
     "peers total xp",
     "peers did 1 and 2 tasks but not 3",
     "number of previous tasks",
-    "lucky days",
+    "very lucky days",
     "peer completed max tasks",
     "peer with max xp",
     "peer max time in campus today",
