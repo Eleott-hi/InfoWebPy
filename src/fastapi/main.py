@@ -6,7 +6,7 @@ from Routers.CRUDRouter import CRUDRouter
 from Routers.FunctionRouter import FunctionRouter
 from ORM.Models import create_pydantic_api_models
 from ORM.Database import get_db, engine
-from ORM.Functions import get_function_list
+from ORM.Functions import get_function_list, get_function_readable_list
 from ORM.SQLRequests import process_row_sql_request
 
 
@@ -47,35 +47,6 @@ funcs = get_function_list(engine)
 LinkModelRouters(app, models)
 LinkFunctionRouters(app, funcs)
 
-# HARDCODED
-readable_function_names = [
-    "human readable transferred points",
-    "human readable xp earned",
-    "peers not leaving during the day",
-    "percentage of successful checks",
-    "points change",
-    "points change using hr-source",
-    "most checked task daily",
-    "last p2p duration",
-    "who and when completed the block",
-    "recommended for check",
-    "two blocks stats",
-    "most friendly peers",
-    "peers passed check on birthday",
-    "peers total xp",
-    "peers did 1 and 2 tasks but not 3",
-    "number of previous tasks",
-    "very lucky days",
-    "peer completed max tasks",
-    "peer with max xp",
-    "peer max time in campus today",
-    "peers came early N times",
-    "peers left M times last N days",
-    "peer came last today",
-    "peer left for N minutes yesterday",
-    "early visits for each month",
-]
-
 
 app.add_middleware(
     CORSMiddleware,
@@ -84,6 +55,18 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/")
+async def root():
+    try:
+        res = "Welcome to Info Web api"
+        logger.info(res)
+
+        return res
+
+    except Exception as e:
+        logger.error(e)
+        raise HTTPException(status_code=404, detail=str(e))
 
 
 @app.get("/tables")
@@ -104,7 +87,7 @@ async def get_functions():
     try:
         res = {
             "functions": [str(f_name) for f_name in funcs],
-            "readable_names": readable_function_names,
+            "readable_names": get_function_readable_list(),
         }
 
         logger.info(res)

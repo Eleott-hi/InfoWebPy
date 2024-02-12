@@ -32,9 +32,9 @@ export default function ErrorDialog({
                 }}
             >
                 <div className='card s21-card p-4 col-xl-3 col-md-6 col-10'>
-                    <h3 className='card-title text-center'>{props.header}</h3>
+                    <h3 className='card-title text-center' style={{ color: 'red' }}>{props.header}</h3>
                     <div className='card-body text-center'>
-                        <h5>{props.content}</h5>
+                        <h5 style={{ color: 'red' }}>{props.content}</h5>
                     </div>
                     <div className='row'>
                         <div className='col text-center'>
