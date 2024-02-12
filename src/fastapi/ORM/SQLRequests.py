@@ -2,7 +2,14 @@ from sqlalchemy.orm import Session
 from sqlalchemy import Table, text
 from sqlalchemy import insert, delete, update
 from datetime import date
-import json
+from enum import Enum
+
+
+def validate_enums(kwargs):
+    for key, value in kwargs.items():
+        if isinstance(value, Enum):
+            kwargs[key] = str(value)
+    return kwargs
 
 
 async def get_pk_field(cls: Table):
@@ -27,8 +34,11 @@ async def get_by_id(db: Session, cls: Table, id: int | str):
 
 
 async def update_by_id(db: Session, cls: Table, id: int | str, **kwargs):
+    kwargs = validate_enums(kwargs)
+
     pk = await get_pk_field(cls)
-    update_query = update(cls).where(cls.c[pk] == id).values(**kwargs).returning(cls)
+    update_query = update(cls).where(
+        cls.c[pk] == id).values(**kwargs).returning(cls)
     result = db.execute(update_query)
     db.commit()
 
@@ -43,6 +53,8 @@ async def delete_by_id(db: Session, cls: Table, id: int | str):
 
 
 async def create(db: Session, cls: Table, **kwargs):
+    kwargs = validate_enums(kwargs)
+
     insert_query = insert(cls).values(**kwargs).returning(cls)
     result = db.execute(insert_query)
     db.commit()
@@ -90,6 +102,7 @@ async def __get_type_name(db: Session, type_ids: tuple[str]):
         return t_name
 
     return [cached_get_type_name(type_id) for type_id in type_ids]
+
 
 async def __get_function_info(db: Session, f_name: str):
 

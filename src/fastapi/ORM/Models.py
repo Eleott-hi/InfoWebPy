@@ -6,6 +6,7 @@ from enum import Enum
 
 def validate_enum(enum_cls, value):
     try:
+        # print("validate_enum", enum_cls, value)
         if isinstance(value, str): return enum_cls[value]
         if isinstance(value, int): return enum_cls(value)
 
@@ -21,6 +22,7 @@ def GetFieldAndValidator(column):
     validator = None
     if hasattr(column.type, 'enums') and column.type.enums:
         enum_type = Enum(column.type.name, column.type.enums)
+        enum_type.__str__ = lambda self: self.name
         field = (enum_type, ...)
         validator = lambda x: validate_enum(enum_type, x)
 
