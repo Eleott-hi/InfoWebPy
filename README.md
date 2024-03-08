@@ -1,5 +1,8 @@
 # Info21 v2.0 Web
 
+![Info21 v2.0 Web](misc/images/main.gif)
+
+
 Web-interface creation for SQL2 project in Python.
 
 
