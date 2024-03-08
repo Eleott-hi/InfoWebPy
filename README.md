@@ -9,8 +9,9 @@ This project aims to create a web-interface for the SQL2 project using Python. T
 ## Technologies Used
 
 - Python 3.11
-- MVC framework (Django or Flask)
-- Server-Side Rendering
+- Fastapi
+- React (Server-Side Rendering)
+- SQLAlchemy, PostgresQL
 - Docker
 - Nginx
 
@@ -25,24 +26,12 @@ git clone <repository_url>
 2. Navigate to the project directory:
 
 ```
-cd <project_directory>
+cd <project_directory>/src
 ```
 
-3. Install dependencies:
+3. Up docker instance.
 
-```
-pip install -r requirements.txt
-```
-
-4. Configure the application using the configuration file, which includes a DBMS connection string.
-
-5. Build Docker containers:
-
-```
-docker-compose build
-```
-
-6. Run Docker containers:
+4. Run Docker containers:
 
 ```
 docker-compose up
@@ -83,11 +72,3 @@ The application can be deployed using Docker containers:
 - Web application container
 
 Docker-compose is provided to run the entire application. Only the Nginx container is exposed to the outside.
-
-## Feedback
-
-Your feedback on the project is highly appreciated. Please [click here](https://forms.yandex.ru/cloud/64182f71f47e73009ed090d8/) to leave your feedback.
-
----
-
-By implementing this web-interface for the SQL2 project, users can conveniently interact with the database and perform various operations through an intuitive and user-friendly interface.
