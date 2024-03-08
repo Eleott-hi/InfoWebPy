@@ -28,8 +28,7 @@ git clone <repository_url>
 ```
 cd <project_directory>/src
 ```
-
-3. Up docker instance.
+3. Spin up Docker instances
 
 4. Run Docker containers:
 
